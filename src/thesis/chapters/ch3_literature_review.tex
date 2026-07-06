@@ -170,17 +170,17 @@ Alternatively, soft routing strategies may assign weights to multiple clusters b
 
 The KFC framework handles highly heterogeneous data effectively and improves interpretability by explicitly linking predictions to localized regions of the input space. Nevertheless, its performance depends heavily on initial clustering quality, requires manual selection of the hyperparameter $K$, and hard-assignment boundaries still introduce predictive discontinuities at cluster edges.
 
-Based on the reviewed literature, clusterwise supervised learning represents a paradigm shift from output-space consensus learning to input-space partitioning. While consensus-based methods adapt predictions dynamically using similarity in model outputs, clusterwise methods predefine structural regions in the feature space and learn specialized models within each region. Despite their effectiveness in handling heterogeneous data, these methods remain algorithmically fragmented, motivating the need for standardized, production-ready software implementations.
+Based on the reviewed literature, clusterwise supervised learning represents a paradigm shift from output-space consensus learning to input-space partitioning. While consensus-based methods adapt predictions dynamically using similarity in model outputs, clusterwise methods predefine structural regions in the feature space and learn specialized models within each region. Despite their effectiveness in handling heterogeneous data, these methods remain algorithmically fragmented, motivating the need for standardized, reusable, and extensible research software implementations.
 
 \section{Software Engineering for Python Libraries}
 
 \hs The deployment of advanced machine learning models in practical environments requires more than algorithmic correctness; it demands robust software design that ensures reproducibility, modularity, and extensibility. In this context, software engineering principles play a critical role in bridging the gap between theoretical models and usable systems.
 
-Modern Python-based machine learning ecosystems, particularly those built around the \textbf{scikit-learn} API, enforce a standardized interface based on the \textbf{fit--predict} paradigm. This abstraction enables interoperability between models, preprocessing pipelines, and evaluation frameworks, ensuring consistent behavior across different experimental settings.
+Modern Python-based machine learning ecosystems, particularly those built around the \textbf{scikit-learn} API, enforce a standardized interface based on the \textbf{fit--predict} paradigm \cite{pedregosa2011sklearn,buitinck2013api}. This abstraction enables interoperability between models, preprocessing pipelines, and evaluation frameworks, ensuring consistent behavior across different experimental settings.
 
-To support complex ensemble and clusterwise learning systems, a modular architecture is required. Such systems typically separate functionality into distinct components, including data partitioning, model training, validation handling, and aggregation logic. This separation of concerns improves maintainability and allows individual modules to be extended without modifying the core framework.
+To support complex ensemble and clusterwise learning systems, a modular architecture is required. Such systems typically separate functionality into distinct components, including data partitioning, model training, validation handling, and aggregation logic. This separation of concerns improves maintainability and allows individual modules to be extended without modifying the core framework \cite{gamma1993,meyer1988}.
 
-Design principles such as encapsulation and the Open/Closed Principle further ensure that implementations remain stable while allowing extensibility. In particular, new base estimators, distance functions, or aggregation strategies can be integrated without altering existing system behavior.
+Design principles such as encapsulation and the Open/Closed Principle further ensure that implementations remain stable while allowing extensibility \cite{meyer1988}. In particular, new base estimators, distance functions, or aggregation strategies can be integrated without altering existing system behavior.
 
 For clusterwise learning frameworks such as the KFCProcedure, software design must manage the interaction between unsupervised clustering and supervised local models. This requires internal routing mechanisms that assign query points to appropriate local estimators while preserving a consistent external interface.
 
@@ -188,7 +188,7 @@ Similarly, GradientCOBRA requires an architecture capable of handling validation
 
 Despite these requirements, existing implementations of advanced aggregation methods remain fragmented and lack standardized software design patterns. This limitation restricts reproducibility and prevents seamless integration into widely used machine learning pipelines.
 
-In conclusion, effective implementation of advanced ensemble and clusterwise learning methods requires adherence to structured software engineering principles. However, the absence of unified, production-grade Python libraries for methods such as KFC and GradientCOBRA highlights a significant gap between theoretical development and practical deployment, motivating the need for standardized implementations.
+In conclusion, effective implementation of advanced ensemble and clusterwise learning methods requires adherence to structured software engineering principles. However, the absence of unified, reusable, and well-tested research-oriented Python implementations for methods such as KFC and GradientCOBRA highlights a significant gap between theoretical development and practical deployment, motivating the need for standardized implementations.
 
 \section{Summary of Reviewed Literature}
 
@@ -322,14 +322,14 @@ The key research gaps identified in this study are summarized as follows:
           
     \item \textbf{Lack of automated parameter optimization frameworks:} Threshold-based approaches, such as COBRA and MixCOBRA, require manual tuning of hyperparameters, which is computationally expensive and sensitive to dataset characteristics.
           
-    \item \textbf{Absence of standardized clusterwise learning libraries:} Although the KFCProcedure provides a structured clusterwise learning framework, there is no widely adopted production-grade implementation supporting reusable local expert modeling and routing mechanisms.
+    \item \textbf{Absence of standardized clusterwise learning libraries:} Although the KFCProcedure provides a structured clusterwise learning framework, there is no widely adopted, well-tested, and reusable implementation supporting local expert modeling and routing mechanisms.
           
     \item \textbf{Limited practical deployment of GradientCOBRA:} Despite its continuous and differentiable formulation, GradientCOBRA lacks optimized implementations that support scalable kernel computation and efficient gradient-based optimization in large datasets.
           
           
 \end{itemize}
 
-These gaps highlight a clear disconnect between theoretical advancements in localized ensemble learning and their practical deployment in software systems. This thesis addresses these limitations by developing standardized, modular, and production-ready Python libraries for GradientCOBRA and the KFCProcedure, enabling reproducibility, scalability, and integration into modern machine learning workflows.
+These gaps highlight a clear disconnect between theoretical advancements in localized ensemble learning and their practical deployment in software systems. This thesis addresses these limitations by developing standardized, modular, reusable, and extensible research-oriented Python libraries for GradientCOBRA and the KFCProcedure, enabling reproducible experimentation and integration into modern machine learning workflows.
 
 % =========================================================
 
@@ -341,5 +341,5 @@ Subsequently, prediction-based aggregation extended ensemble learning to heterog
 
 Finally, clusterwise supervised learning was examined as an alternative paradigm that partitions the input space prior to model training, with the KFCProcedure providing a structured implementation of this concept. The chapter also discussed the importance of software engineering principles in transforming theoretical machine learning methods into reusable, modular, and extensible Python libraries.
 
-Overall, the reviewed literature shows that although ensemble aggregation and clusterwise learning methods have advanced significantly, their practical implementation remains limited by fragmented codebases, computational cost, parameter sensitivity, and lack of standardized software design. These limitations motivate the development of unified, production-ready Python libraries for advanced aggregation and clusterwise learning methods.
+Overall, the reviewed literature shows that although ensemble aggregation and clusterwise learning methods have advanced significantly, their practical implementation remains limited by fragmented codebases, computational cost, parameter sensitivity, and lack of standardized software design. These limitations motivate the development of unified, reusable, and extensible research frameworks for advanced aggregation and clusterwise learning methods.
 

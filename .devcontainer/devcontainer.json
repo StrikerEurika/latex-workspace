@@ -9,7 +9,7 @@
   ],
   "runArgs": [
     "--name",
-    "thesis-report"
+    "latex-devcontainer"
   ],
   "customizations": {
     "vscode": {
