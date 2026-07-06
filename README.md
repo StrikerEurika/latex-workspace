@@ -1,397 +1,706 @@
-# Thesis LaTeX Project
+# Multi-Project LaTeX Workspace
 
-## Python Libraries for Clusterwise Predictive Models: KFCProcedure and GradientCOBRA
+This repository is a reusable LaTeX workspace designed to manage multiple LaTeX projects in one clean structure.
 
-This repository contains the LaTeX source code for the engineering degree thesis titled:
+The main idea is to keep all source files inside the `src/` folder and automatically generate compiled outputs inside the `build/` folder based on the project name.
 
-**Python Libraries for Clusterwise Predictive Models: KFCProcedure and GradientCOBRA**
-
-The thesis presents the design, implementation, and experimental evaluation of a Python-based machine learning framework for clusterwise supervised learning and COBRA-based ensemble aggregation.
-
-The project was developed as part of an internship at the **Research and Data Analytics Laboratory (ReDA Lab)**, Department of Applied Mathematics and Statistics, Institute of Technology of Cambodia.
-
----
-
-## Purpose of This Repository
-
-This repository is mainly prepared for readers, advisors, committee members, and future students who want to understand, review, or compile the thesis document.
-
-It contains:
-
-* The complete LaTeX source code of the thesis.
-* Front matter pages, including cover pages, acknowledgement, abstracts, and abbreviations.
-* Eight main thesis chapters.
-* Figures used in the thesis.
-* Bibliography entries.
-* Custom thesis style configuration.
-* A compiled PDF output inside the build folder.
-
-The main document should be compiled from:
+For example:
 
 ```text
-main.tex
+src/thesis/main.tex  →  build/thesis/main.pdf
+src/slide/main.tex   →  build/slide/main.pdf
+src/report/main.tex  →  build/report/main.pdf
 ```
 
----
-
-## Audience
-
-This README is intended for:
-
-* Thesis advisors and reviewers who want to inspect the LaTeX source.
-* Committee members who want to understand the structure of the thesis.
-* Students who want to learn how the thesis document is organized.
-* Future maintainers who may update the thesis content, figures, references, or formatting.
+This structure is useful for managing thesis documents, presentation slides, reports, papers, proposals, or any other LaTeX-based documents in the same workspace.
 
 ---
 
-## Thesis Overview
+## Purpose
 
-The thesis focuses on two connected machine learning components:
+The purpose of this workspace is to provide a clean and scalable LaTeX project structure that supports:
 
-### 1. KFCProcedure
+* Multiple LaTeX projects in one repository.
+* Separate source folders for each project.
+* Separate build folders for each output.
+* VS Code LaTeX Workshop integration.
+* Docker-compatible LaTeX compilation.
+* Reusable build scripts.
+* Better organization of figures, chapters, sections, references, and style files.
 
-KFCProcedure is a clusterwise supervised learning framework. It follows three main steps:
-
-* **K-step:** Detects cluster structures in the input data using divergence-based clustering.
-* **F-step:** Trains local predictive models inside each cluster.
-* **C-step:** Combines the predictions from different divergence-based configurations.
-
-### 2. GradientCOBRA Subsystem
-
-The GradientCOBRA subsystem provides COBRA-based aggregation methods, including:
-
-* **GradientCOBRA** for regression aggregation.
-* **MixCOBRARegressor** for mixed input-space and prediction-space regression aggregation.
-* **CombinedClassifier** for classification aggregation.
-
-Together, these components form a reusable and modular Python framework for studying clusterwise learning and prediction aggregation.
+Instead of keeping everything in the project root, each LaTeX project is placed inside its own folder under `src/`.
 
 ---
 
-## Thesis Chapter Structure
-
-The thesis is organized into eight chapters.
-
-| Chapter   | Title                               | Purpose                                                                                        |
-| --------- | ----------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Chapter 1 | Introduction                        | Presents the internship, organization, and project context.                                    |
-| Chapter 2 | Presentation of Project             | Describes the project problem, objectives, and planning.                                       |
-| Chapter 3 | Literature Review                   | Reviews ensemble learning, COBRA methods, GradientCOBRA, and KFCProcedure.                     |
-| Chapter 4 | Methodology                         | Explains the research methodology, system design, and experimental design.                     |
-| Chapter 5 | Tools and Technologies              | Presents the programming tools, libraries, and platforms used in the project.                  |
-| Chapter 6 | Implementation                      | Describes the source-code architecture, modules, software design, testing, and CI/CD workflow. |
-| Chapter 7 | Experimental Results and Discussion | Reports classification and regression experiment results.                                      |
-| Chapter 8 | Conclusion and Future Work          | Summarizes the work, limitations, contributions, and future improvements.                      |
-
----
-
-## Repository Structure
+## General Structure
 
 ```text
-thesis/
-├── main.tex
-├── thesisstyle.sty
-├── references.bib
+project-root/
 ├── README.md
-├── settings/
-│   └── metadata.tex
-├── frontmatter/
-│   ├── 01_cover.tex
-│   ├── 02a_sub_cover_kh.tex
-│   ├── 02b_sub_cover_fr.tex
-│   ├── 02c_sub_cover_en.tex
-│   ├── 03_acknowledgement.tex
-│   ├── 04a_abstract_kh.tex
-│   ├── 04b_abstract_en.tex
-│   └── 05_abreviation.tex
-├── chapters/
-│   ├── ch1_introduction.tex
-│   ├── ch2_presentation_of_the_project.tex
-│   ├── ch3_literature_review.tex
-│   ├── ch4_methodology.tex
-│   ├── ch5_tool_and_technology.tex
-│   ├── ch6_implementation.tex
-│   ├── ch7_experimental_and_discussion.tex
-│   └── ch8_conlusion_and_future_work.tex
-├── appendices/
-│   └── appendix_a.tex
-├── figures/
-│   ├── architectures/
-│   ├── schools/
-│   ├── tools/
-│   └── timeline.png
 ├── build/
-│   └── main.pdf
+│   ├── thesis/
+│   ├── slide/
+│   └── report/
+│
+├── scripts/
+│   └── build-latex.sh
+│
+├── src/
+│   ├── thesis/
+│   │   ├── main.tex
+│   │   ├── references.bib
+│   │   ├── thesisstyle.sty
+│   │   ├── chapters/
+│   │   ├── frontmatter/
+│   │   ├── appendices/
+│   │   └── figures/
+│   │
+│   ├── slide/
+│   │   ├── main.tex
+│   │   ├── slidestyle.sty
+│   │   ├── sections/
+│   │   └── figures/
+│   │
+│   └── report/
+│       ├── main.tex
+│       ├── sections/
+│       ├── figures/
+│       └── references.bib
+│
 ├── .vscode/
 └── .devcontainer/
 ```
 
 ---
 
-## Main Files Explained
+## Main Idea
 
-### `main.tex`
+Each folder inside `src/` represents one LaTeX project.
 
-This is the main entry point of the thesis. It loads the style file, metadata, front matter, chapters, references, and appendices.
-
-Compile only this file. Do not compile individual chapter files directly.
-
----
-
-### `thesisstyle.sty`
-
-This file controls the thesis formatting, including:
-
-* Page margins.
-* Fonts.
-* Khmer language support.
-* Chapter and section styles.
-* Table of contents style.
-* Figure and table numbering.
-* Bibliography formatting.
-* Hyperlink formatting.
-* Watermark and page layout.
-
-Content should not be written directly inside this file unless it is related to formatting.
-
----
-
-### `settings/metadata.tex`
-
-This file stores reusable thesis information, such as:
-
-* Student name.
-* Thesis title.
-* Academic year.
-* Department name.
-* Advisor name.
-* Enterprise name.
-* Cover-page text in Khmer, English, and French.
-
-When the title, name, date, or advisor information needs to be updated, this file should be checked first.
-
----
-
-### `references.bib`
-
-This file stores all bibliography entries in BibTeX format.
-
-Citations in the thesis should use citation keys from this file, for example:
-
-```latex
-\cite{breiman1996}
-```
-
----
-
-## Front Matter
-
-The `frontmatter/` folder contains all pages before Chapter 1.
-
-| File                     | Description            |
-| ------------------------ | ---------------------- |
-| `01_cover.tex`           | Main cover page        |
-| `02a_sub_cover_kh.tex`   | Khmer sub-cover page   |
-| `02b_sub_cover_fr.tex`   | French sub-cover page  |
-| `02c_sub_cover_en.tex`   | English sub-cover page |
-| `03_acknowledgement.tex` | Acknowledgement        |
-| `04a_abstract_kh.tex`    | Khmer abstract         |
-| `04b_abstract_en.tex`    | English abstract       |
-| `05_abreviation.tex`     | List of abbreviations  |
-
----
-
-## Figures
-
-All figures are stored in the `figures/` folder.
-
-The figure folders are organized by purpose:
+For example:
 
 ```text
-figures/
-├── architectures/
-├── schools/
-├── tools/
-└── timeline.png
+src/thesis/
+src/slide/
+src/report/
 ```
 
-Use the following LaTeX pattern to insert a figure:
+Each project should have its own `main.tex` file.
 
-```latex
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{figures/architectures/kfc.png}
-    \caption{KFCProcedure Clusterwise Framework Architecture}
-    \label{fig:kfc_architecture}
-\end{figure}
+The build system detects the project folder name and sends the output to the matching folder inside `build/`.
+
+Example:
+
+```text
+src/thesis/main.tex
 ```
 
-When referring to the figure in the thesis text, use:
+outputs to:
 
-```latex
-As shown in Figure~\ref{fig:kfc_architecture}, ...
+```text
+build/thesis/main.pdf
+```
+
+and:
+
+```text
+src/slide/main.tex
+```
+
+outputs to:
+
+```text
+build/slide/main.pdf
+```
+
+This keeps the workspace clean and avoids mixing generated files with source files.
+
+---
+
+## Source Folder
+
+The `src/` folder contains all editable LaTeX source files.
+
+Each subfolder inside `src/` should represent one document project.
+
+Example:
+
+```text
+src/
+├── thesis/
+├── slide/
+└── report/
+```
+
+Recommended contents for a thesis project:
+
+```text
+src/thesis/
+├── main.tex
+├── references.bib
+├── thesisstyle.sty
+├── settings/
+├── frontmatter/
+├── chapters/
+├── appendices/
+└── figures/
+```
+
+Recommended contents for a slide project:
+
+```text
+src/slide/
+├── main.tex
+├── slidestyle.sty
+├── sections/
+└── figures/
 ```
 
 ---
 
-## Tables
+## Build Folder
 
-Tables should be written using clear captions and labels.
+The `build/` folder contains generated files only.
+
+Do not manually edit files inside `build/`.
+
+Example:
+
+```text
+build/
+├── thesis/
+│   ├── main.pdf
+│   ├── main.aux
+│   ├── main.log
+│   └── ...
+│
+└── slide/
+    ├── main.pdf
+    ├── main.aux
+    ├── main.log
+    └── ...
+```
+
+The final PDFs are usually:
+
+```text
+build/thesis/main.pdf
+build/slide/main.pdf
+```
+
+---
+
+## Build Script
+
+The workspace uses a general build script:
+
+```text
+scripts/build-latex.sh
+```
+
+The script receives three inputs:
+
+```text
+document path
+workspace path
+build mode
+```
+
+Example:
+
+```bash
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" full
+```
+
+The script detects the folder name inside `src/` and builds to the matching folder inside `build/`.
+
+Recommended script:
+
+```bash
+#!/bin/bash
+set -e
+
+DOC="$1"
+WORKSPACE="$2"
+MODE="$3"
+
+if [[ ! -f "$DOC" && -f "$DOC.tex" ]]; then
+  DOC="$DOC.tex"
+fi
+
+DOC_DIR="$(dirname "$DOC")"
+DOC_FILE="$(basename "$DOC")"
+DOC_BASE="${DOC_FILE%.tex}"
+
+PROJECT_NAME="$(basename "$DOC_DIR")"
+
+OUTDIR="$WORKSPACE/build/$PROJECT_NAME"
+
+mkdir -p "$OUTDIR"
+
+cd "$DOC_DIR"
+
+echo "================================================="
+echo "Building project: $PROJECT_NAME"
+echo "Source: $DOC_FILE"
+echo "Output: $OUTDIR"
+echo "Mode: $MODE"
+echo "================================================="
+
+XELATEX="${XELATEX:-xelatex}"
+BIBER="${BIBER:-biber}"
+
+echo "Using XeLaTeX: $(command -v "$XELATEX" || echo "$XELATEX not found")"
+echo "Using Biber: $(command -v "$BIBER" || echo "$BIBER not found")"
+
+if [[ "$MODE" == "fast" ]]; then
+  "$XELATEX" \
+    -interaction=nonstopmode \
+    -halt-on-error \
+    -synctex=1 \
+    -shell-escape \
+    -output-directory="$OUTDIR" \
+    "$DOC_FILE"
+else
+  "$XELATEX" \
+    -interaction=nonstopmode \
+    -halt-on-error \
+    -synctex=1 \
+    -shell-escape \
+    -output-directory="$OUTDIR" \
+    "$DOC_FILE"
+
+  "$BIBER" \
+    --input-directory="$OUTDIR" \
+    --output-directory="$OUTDIR" \
+    "$DOC_BASE" || true
+
+  "$XELATEX" \
+    -interaction=nonstopmode \
+    -halt-on-error \
+    -synctex=1 \
+    -shell-escape \
+    -output-directory="$OUTDIR" \
+    "$DOC_FILE"
+
+  "$XELATEX" \
+    -interaction=nonstopmode \
+    -halt-on-error \
+    -synctex=1 \
+    -shell-escape \
+    -output-directory="$OUTDIR" \
+    "$DOC_FILE"
+fi
+
+echo "Done: $OUTDIR/$DOC_BASE.pdf"
+```
+
+Make the script executable:
+
+```bash
+chmod +x scripts/build-latex.sh
+```
+
+---
+
+## Build Modes
+
+The build script supports two modes.
+
+### Fast Mode
+
+Fast mode runs XeLaTeX once.
+
+Use it when editing normal text, figures, or layout:
+
+```bash
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" fast
+```
+
+### Full Mode
+
+Full mode runs:
+
+```text
+xelatex → biber → xelatex → xelatex
+```
+
+Use it when updating:
+
+* References.
+* Citations.
+* Table of contents.
+* List of figures.
+* List of tables.
+* Cross-references.
+
+Example:
+
+```bash
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" full
+```
+
+---
+
+## VS Code Setup
+
+This workspace is designed to work with the **LaTeX Workshop** extension in VS Code.
+
+Recommended `.vscode/settings.json`:
+
+```json
+{
+  "latex-workshop.latex.autoBuild.run": "never",
+
+  "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build",
+
+  "latex-workshop.latex.autoBuild.onSave.files.ignore": [],
+  "latex-workshop.latex.rootFile.useSubFile": false,
+
+  "latex-workshop.latex.recipe.default": "general: xelatex + biber",
+
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "general: xelatex + biber",
+      "tools": [
+        "general-full"
+      ]
+    },
+    {
+      "name": "general: xelatex fast",
+      "tools": [
+        "general-fast"
+      ]
+    }
+  ],
+
+  "latex-workshop.latex.tools": [
+    {
+      "name": "general-full",
+      "command": "/bin/bash",
+      "args": [
+        "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
+        "%DOC%",
+        "%WORKSPACE_FOLDER%",
+        "full"
+      ],
+      "env": {}
+    },
+    {
+      "name": "general-fast",
+      "command": "/bin/bash",
+      "args": [
+        "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
+        "%DOC%",
+        "%WORKSPACE_FOLDER%",
+        "fast"
+      ],
+      "env": {}
+    }
+  ],
+
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild.enabled": true,
+
+  "latex-workshop.formatting.latex": "latexindent",
+  "latex-workshop.latex.autoClean.run": "never",
+
+  "latex-workshop.intellisense.package.enabled": true,
+
+  "[latex]": {
+    "editor.formatOnSave": false,
+    "editor.wordWrap": "on",
+    "editor.rulers": [100]
+  }
+}
+```
+
+---
+
+## How to Build in VS Code
+
+Open the workspace root folder in VS Code.
+
+Example:
+
+```bash
+code .
+```
+
+Then open the `main.tex` file of the project you want to build.
+
+Examples:
+
+```text
+src/thesis/main.tex
+src/slide/main.tex
+src/report/main.tex
+```
+
+Then run:
+
+```text
+Cmd + Shift + P
+→ LaTeX Workshop: Build with recipe
+→ general: xelatex + biber
+```
+
+For fast drafting:
+
+```text
+Cmd + Shift + P
+→ LaTeX Workshop: Build with recipe
+→ general: xelatex fast
+```
+
+---
+
+## How to Build from Terminal
+
+From the workspace root:
+
+```bash
+cd project-root
+```
+
+Build a thesis project:
+
+```bash
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" full
+```
+
+Build a slide project:
+
+```bash
+./scripts/build-latex.sh "$PWD/src/slide/main.tex" "$PWD" fast
+```
+
+Build another project:
+
+```bash
+./scripts/build-latex.sh "$PWD/src/report/main.tex" "$PWD" full
+```
+
+---
+
+## Docker Support
+
+This workspace can be used inside Docker or a VS Code Dev Container.
+
+The build script does not hard-code macOS paths such as:
+
+```text
+/Library/TeX/texbin/xelatex
+```
+
+Instead, it uses:
+
+```bash
+XELATEX="${XELATEX:-xelatex}"
+BIBER="${BIBER:-biber}"
+```
+
+This makes the build system portable across:
+
+* macOS
+* Linux
+* Docker
+* VS Code Dev Containers
+
+---
+
+## Docker Dependencies
+
+For a Debian or Ubuntu-based Docker image, install the following packages:
+
+```dockerfile
+RUN apt-get update && apt-get install -y \
+    texlive-xetex \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-lang-other \
+    biber \
+    latexmk \
+    python3-pygments \
+    fonts-noto \
+    fonts-noto-cjk \
+    fonts-noto-color-emoji \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+`python3-pygments` is required when using the LaTeX package `minted`.
+
+---
+
+## Recommended LaTeX Project Pattern
+
+Each project should have one main file:
+
+```text
+main.tex
+```
+
+The main file should load smaller files using `\input`.
 
 Example:
 
 ```latex
-\begin{table}[H]
-    \centering
-    \caption{Software Environment Used in the Experiment}
-    \label{tab:software_environment}
-    \begin{tabular}{ll}
-        \toprule
-        Component & Version \\
-        \midrule
-        Python & 3.12.13 \\
-        NumPy & 2.0.2 \\
-        Scikit-learn & 1.6.1 \\
-        \bottomrule
-    \end{tabular}
-\end{table}
+\documentclass{report}
+
+\usepackage{thesisstyle}
+\addbibresource{references.bib}
+
+\begin{document}
+
+\input{frontmatter/01_cover}
+\input{chapters/ch1_introduction}
+\input{chapters/ch2_methodology}
+
+\printbibliography
+
+\end{document}
 ```
 
-When referring to the table in the thesis text, use:
+For slides:
 
 ```latex
-Table~\ref{tab:software_environment} summarizes the software environment.
+\documentclass{beamer}
+
+\usepackage{slidestyle}
+
+\title{Presentation Title}
+\author{Author Name}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\input{sections/01_introduction}
+\input{sections/02_methodology}
+
+\end{document}
 ```
 
 ---
 
-## How to Compile the Thesis
+## Root Comments for Subfiles
 
-This thesis uses custom fonts and Khmer text support, so it should be compiled with **XeLaTeX**.
+For better root detection in VS Code, add this line at the top of subfiles:
 
-From the thesis folder, run:
-
-```bash
-xelatex main.tex
-biber main
-xelatex main.tex
-xelatex main.tex
+```latex
+% !TEX root = ../main.tex
 ```
 
-Alternatively, if `latexmk` is installed, run:
+Example:
 
-```bash
-latexmk -xelatex main.tex
+```latex
+% !TEX root = ../main.tex
+
+\chapter{Introduction}
+
+Content here.
 ```
 
-The final PDF will be generated as:
+Use this for files inside:
 
 ```text
-main.pdf
-```
-
-In this project, a compiled version is also available inside:
-
-```text
-build/main.pdf
+chapters/
+frontmatter/
+appendices/
+sections/
 ```
 
 ---
 
 ## Recommended Editing Workflow
 
-For normal thesis editing, follow this workflow:
+For normal editing:
 
-1. Edit only the relevant chapter file inside `chapters/`.
-2. Update figures inside `figures/` if needed.
-3. Add or update references in `references.bib`.
-4. Compile from `main.tex`.
-5. Check the generated PDF.
-6. Verify the table of contents, list of figures, list of tables, and references.
+1. Open the workspace root in VS Code.
+2. Edit the relevant file inside `src/{project-name}/`.
+3. Build using the general recipe.
+4. Check the generated PDF inside `build/{project-name}/`.
+5. Avoid editing generated files inside `build/`.
 
-Avoid editing the `build/` folder manually because it contains generated files.
+Example workflow for thesis:
 
----
-
-## Citation and Reference Notes
-
-All academic sources should be added to `references.bib`.
-
-Use citation commands such as:
-
-```latex
-\cite{key}
+```text
+Edit:   src/thesis/chapters/ch1_introduction.tex
+Build:  src/thesis/main.tex
+Check:  build/thesis/main.pdf
 ```
 
-or
+Example workflow for slides:
 
-```latex
-\parencite{key}
+```text
+Edit:   src/slide/sections/01_intro.tex
+Build:  src/slide/main.tex
+Check:  build/slide/main.pdf
 ```
 
-depending on the citation style configured in the thesis style file.
+---
 
-After adding new references, run `biber` and compile the thesis again.
+## Best Practices
+
+Use this workspace with the following habits:
+
+* Keep source files inside `src/`.
+* Keep generated files inside `build/`.
+* Use one folder per LaTeX project.
+* Use one `main.tex` per project.
+* Use `fast` build for quick edits.
+* Use `full` build before final submission.
+* Do not manually edit files in `build/`.
+* Do not compile chapter or section files directly.
+* Keep figures inside the related project folder.
+* Keep formatting commands inside a `.sty` file.
+* Keep project metadata in a separate file when needed.
+* Use clear labels for figures, tables, equations, and sections.
 
 ---
 
-## Notes for Reviewers
+## Example Output
 
-This LaTeX project is organized so that thesis content and formatting are separated.
+After building, the workspace may look like this:
 
-* Thesis content is mainly in `frontmatter/`, `chapters/`, and `appendices/`.
-* Formatting is mainly controlled by `thesisstyle.sty`.
-* Reusable metadata is stored in `settings/metadata.tex`.
-* References are stored in `references.bib`.
-* Figures are stored in `figures/`.
+```text
+build/
+├── thesis/
+│   ├── main.pdf
+│   ├── main.aux
+│   ├── main.bbl
+│   ├── main.log
+│   └── ...
+│
+├── slide/
+│   ├── main.pdf
+│   ├── main.aux
+│   ├── main.log
+│   └── ...
+│
+└── report/
+    ├── main.pdf
+    ├── main.aux
+    ├── main.bbl
+    ├── main.log
+    └── ...
+```
 
-This structure makes it easier to review, update, and maintain the thesis document.
-
----
-
-## Notes for Future Students
-
-This project can be used as a reference structure for organizing a thesis in LaTeX. The main idea is to keep each part of the thesis in a separate file instead of writing everything in one long document.
-
-A good practice is to keep:
-
-* One main file for compilation.
-* One style file for formatting.
-* One metadata file for repeated information.
-* One folder for front matter.
-* One folder for chapters.
-* One folder for figures.
-* One bibliography file for references.
-
-This makes the thesis easier to edit, review, debug, and compile.
-
----
-
-## Project Information
-
-**Institution:** Institute of Technology of Cambodia
-**Department:** Department of Applied Mathematics and Statistics
-**Laboratory:** Research and Data Analytics Laboratory
-**Thesis Topic:** Python Libraries for Clusterwise Predictive Models KFCProcedure and GradientCOBRA
-**Specialty:** Data Science
-**Academic Year:** 2025–2026
+Only the PDF files are usually needed for reading or submission. The other files are generated by LaTeX and can be cleaned or ignored when needed.
 
 ---
 
-## Final Output
+## Final Notes
 
-The expected final output of this repository is a complete thesis PDF containing:
+This workspace is intended to make LaTeX project management cleaner and easier.
 
-* Cover pages in Khmer, French, and English.
-* Acknowledgement.
-* Khmer and English abstracts.
-* Table of contents.
-* List of figures.
-* List of tables.
-* List of abbreviations.
-* Eight main chapters.
-* References.
-* Appendices.
+The key principle is simple:
 
-The PDF should be checked carefully before submission to ensure that formatting, page numbering, figures, tables, citations, and references are correct.
+```text
+src/{project-name}/main.tex → build/{project-name}/main.pdf
+```
+
+By following this pattern, multiple LaTeX documents can be managed in one repository without mixing source files, generated files, figures, references, and outputs.
