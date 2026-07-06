@@ -1,0 +1,39 @@
+\section{LITERATURE REVIEW}
+
+\subsection{Reviewed Methods}
+
+\begin{frame}[t]{From Ensemble Learning to Clusterwise Learning}
+    \footnotesize
+    \vspace{-0.12cm}
+    \begin{table}
+        \scriptsize
+        \renewcommand{\arraystretch}{1.02}
+        \setlength{\tabcolsep}{1.8pt}
+        \begin{tabularx}{\textwidth}{
+                >{\raggedright\arraybackslash}m{2.35cm}
+                >{\raggedright\arraybackslash}m{2.65cm}
+                >{\raggedright\arraybackslash}X
+                >{\raggedright\arraybackslash}m{2.45cm}}
+            \toprule
+            \textbf{Method}    &
+            \textbf{Author}    &
+            \textbf{Core Idea} &
+            \textbf{Limitations}                                                                                                                             \\
+            \midrule
+            Bagging / Boosting & \cite{breiman1996,freund1997} & Combine multiple learners to improve prediction stability. & Limited local adaptation.      \\
+            CombinedClassifier & \cite{mojirsheibani200228}    & Aggregate samples with similar classifier outputs.         & Strict agreement can be
+            sparse.                                                                                                                                          \\
+            COBRA              & \cite{biau2016}               & Use prediction-space consensus for regression.             & Sensitive threshold selection. \\
+            MixCOBRA           & \cite{fischer2019}            & Combine feature and prediction similarities.               & Higher tuning cost.            \\
+            GradientCOBRA      & \cite{has2023gradientcobra}   & Apply smooth kernel weighting with optimized parameters.   & Computational cost.            \\
+            KFCProcedure       & \cite{has2021kfc}             & Cluster data, train local models, and combine outputs.     & Sensitive to clustering
+            and K.                                                                                                                                           \\
+            \bottomrule
+        \end{tabularx}
+    \end{table}
+    \vspace{-0.12cm}
+    \begin{block}{Review Gap}
+        Existing methods provide strong foundations, but a modular package is still needed to connect
+        clusterwise learning with reusable COBRA-based aggregation.
+    \end{block}
+\end{frame}

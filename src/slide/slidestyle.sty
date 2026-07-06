@@ -1,0 +1,178 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{slidestyle}[2026/06/15 Custom Beamer Slide Style]
+
+\RequirePackage{fontspec}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{booktabs}
+\RequirePackage{array}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{mathrsfs}
+\RequirePackage{tabularx}
+\RequirePackage[table]{xcolor}
+\RequirePackage{minted}
+\RequirePackage[
+    backend=biber,
+    style=authoryear,
+    citestyle=authoryear,
+    maxcitenames=2,
+    maxbibnames=99
+]{biblatex}
+\setbeamertemplate{bibliography item}{}
+\renewcommand*{\bibfont}{\scriptsize}
+
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric}
+
+\usetheme{Madrid}
+\useinnertheme{rounded}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+
+\definecolor{mainblue}{HTML}{1F4E79}
+\definecolor{tealactive}{HTML}{087D85}
+\definecolor{lightgraytab}{HTML}{E6E6E6}
+\definecolor{darkgray}{HTML}{333333}
+\definecolor{lightblue}{HTML}{D9EAF7}
+
+\setbeamercolor{structure}{fg=mainblue}
+\setbeamercolor{frametitle}{bg=white, fg=mainblue}
+\setbeamercolor{block title}{fg=white,bg=mainblue}
+\setbeamercolor{block body}{fg=black,bg=lightblue}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+
+% Metadata
+\newcommand{\presentationtitle}{}
+\newcommand{\preparedby}{}
+\newcommand{\presentationdate}{}
+\newcommand{\organization}{}
+\newcommand{\advisor}{}
+\newcommand{\coadvisor}{}
+\newcommand{\supervisor}{}
+\newcommand{\studentname}{}
+\newcommand{\academicyear}{}
+\newcommand{\university}{}
+\newcommand{\department}{}
+
+\newcommand{\setpresentationtitle}[1]{\renewcommand{\presentationtitle}{#1}}
+\newcommand{\setpreparedby}[1]{\renewcommand{\preparedby}{#1}}
+\newcommand{\setpresentationdate}[1]{\renewcommand{\presentationdate}{#1}}
+\newcommand{\setorganization}[1]{\renewcommand{\organization}{#1}}
+\newcommand{\setadvisor}[1]{\renewcommand{\advisor}{#1}}
+\newcommand{\setcoadvisor}[1]{\renewcommand{\coadvisor}{#1}}
+\newcommand{\setsupervisor}[1]{\renewcommand{\supervisor}{#1}}
+\newcommand{\setstudentname}[1]{\renewcommand{\studentname}{#1}}
+\newcommand{\setacademicyear}[1]{\renewcommand{\academicyear}{#1}}
+\newcommand{\setuniversity}[1]{\renewcommand{\university}{#1}}
+\newcommand{\setdepartment}[1]{\renewcommand{\department}{#1}}
+
+% Frame title
+\setbeamertemplate{frametitle}{
+    \vspace{0.22cm}
+    \begin{beamercolorbox}[
+        wd=\paperwidth,
+        leftskip=0.55cm,
+        rightskip=0.55cm,
+        ht=0.45cm,
+        dp=0.15cm
+    ]{frametitle}
+        {\Large\bfseries\color{mainblue}
+        \ifnum\value{subsection}>0
+            \arabic{section}.\arabic{subsection}.\ \insertframetitle
+        \else
+            \arabic{section}.\ \insertframetitle
+        \fi}
+    \end{beamercolorbox}
+    \vspace{0.15cm}
+}
+
+%------------------------------------------------
+% Footer lengths
+%------------------------------------------------
+\newlength{\footertabwidth}
+\newlength{\footernumberwidth}
+
+\setlength{\footernumberwidth}{1.15cm}
+\setlength{\footertabwidth}{\dimexpr(\paperwidth-\footernumberwidth)/6\relax}
+
+%------------------------------------------------
+% Footer tab command
+%------------------------------------------------
+\newcommand{\footersectiontab}[3]{%
+    \ifnum\value{section}=#1
+        \begin{beamercolorbox}[
+            wd=#2,
+            ht=0.65cm,
+            dp=0cm,
+            center,
+            sep=0pt
+        ]{footer active}
+            \vbox to 0.65cm{\vfil{\scriptsize\bfseries #3}\vfil}
+        \end{beamercolorbox}%
+    \else
+        \begin{beamercolorbox}[
+            wd=#2,
+            ht=0.65cm,
+            dp=0cm,
+            center,
+            sep=0pt
+        ]{footer inactive}
+            \vbox to 0.65cm{\vfil{\scriptsize #3}\vfil}
+        \end{beamercolorbox}%
+    \fi
+}
+%------------------------------------------------
+% Regular slide header and footer
+%------------------------------------------------
+\newcommand{\regularslideheaderfooter}{
+    \setbeamercolor{footer active}{fg=white,bg=tealactive}
+    \setbeamercolor{footer inactive}{fg=white,bg=mainblue}
+    \setbeamercolor{footer number}{fg=white,bg=darkgray}
+
+    \setbeamertemplate{headline}{}
+
+    \setbeamertemplate{footline}{%
+        \hbox to \paperwidth{%
+            \footersectiontab{1}{\footertabwidth}{INTRODUCTION}%
+            \footersectiontab{2}{\footertabwidth}{BACKGROUND}%
+            \footersectiontab{3}{\footertabwidth}{LITERATURE}%
+            \footersectiontab{4}{\footertabwidth}{METHODOLOGY}%
+            \footersectiontab{5}{\footertabwidth}{EXPERIMENTAL}%
+            \footersectiontab{6}{\footertabwidth}{CONCLUSION}%
+            \begin{beamercolorbox}[
+                wd=\footernumberwidth,
+                ht=0.65cm,
+                dp=0cm,
+                center,
+                sep=0pt
+            ]{footer number}
+                \vbox to 0.65cm{\vfil
+                    {\scriptsize\bfseries\insertframenumber/\inserttotalframenumber}
+                \vfil}
+            \end{beamercolorbox}%
+        }%
+    }
+}
+
+
+\newcommand{\plainslide}{
+    \setbeamertemplate{headline}{}
+    \setbeamertemplate{footline}{}
+}
+
+\AtBeginSection[]{
+    {
+    \setbeamertemplate{headline}{}
+    \setbeamertemplate{footline}{}
+    \begin{frame}[plain,noframenumbering]
+        \vfill
+        \centering
+        {\Large\bfseries\color{mainblue}
+        \arabic{section}.\ \insertsection}
+        \vfill
+    \end{frame}
+    }
+}
+
+\endinput

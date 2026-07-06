@@ -1,0 +1,152 @@
+\section{CONCLUSION AND FUTURE WORK}
+
+\subsection{Objective Achievement}
+
+\begin{frame}[t]{Objective Achievement}
+    \footnotesize
+    \centering
+
+    \begin{tikzpicture}[
+            obj/.style={
+                    draw=blue!60,
+                    fill=blue!8,
+                    rounded corners=5pt,
+                    minimum width=4.7cm,
+                    minimum height=1.05cm,
+                    align=center,
+                    font=\scriptsize
+                },
+            status/.style={
+                    draw=green!60!black,
+                    fill=green!12,
+                    rounded corners=5pt,
+                    minimum width=2.0cm,
+                    minimum height=0.65cm,
+                    align=center,
+                    font=\scriptsize\bfseries
+                },
+            arrow/.style={-Latex, thick}
+        ]
+
+        \node[obj] (o1) at (0,0) {
+            Study KFCProcedure\\
+            and COBRA foundations
+        };
+
+        \node[obj] (o2) at (5.3,0) {
+            Develop KFCProcedure\\
+            K-step, F-step, C-step
+        };
+
+        \node[obj] (o3) at (0,-2.0) {
+            Redesign GradientCOBRA\\
+            as reusable combiner
+        };
+
+        \node[obj] (o4) at (5.3,-2.0) {
+            Build modular package\\
+            API, docs, examples
+        };
+
+        \node[status] at (2.65,-3.35) {All Achieved};
+
+        \draw[arrow] (o1) -- (o2);
+        \draw[arrow] (o2) -- (o4);
+        \draw[arrow] (o1) -- (o3);
+        \draw[arrow] (o3) -- (o4);
+
+    \end{tikzpicture}
+
+    \vspace{0.35cm}
+
+    \begin{block}{Summary}
+        The project achieved its objectives by transforming KFCProcedure and COBRA-based aggregation into a modular, reusable, and extensible machine learning package.
+    \end{block}
+
+\end{frame}
+
+
+\subsection{SDG Contribution}
+
+\begin{frame}[t]{Contribution to Sustainable Development Goals}
+    \footnotesize
+
+    \begin{columns}[T,onlytextwidth]
+
+        \column{0.30\textwidth}
+        \centering
+        \includegraphics[width=0.52\linewidth]{figures/sdg/9.png}
+
+        \vspace{0.15cm}
+        \textbf{SDG 9}\\
+        \scriptsize Industry, Innovation and Infrastructure
+
+        \column{0.30\textwidth}
+        \centering
+        \includegraphics[width=0.52\linewidth]{figures/sdg/4.png}
+
+        \vspace{0.15cm}
+        \textbf{SDG 4}\\
+        \scriptsize Quality Education
+
+        \column{0.30\textwidth}
+        \centering
+        \includegraphics[width=0.52\linewidth]{figures/sdg/17.png}
+
+        \vspace{0.15cm}
+        \textbf{SDG 17}\\
+        \scriptsize Partnerships for the Goals
+
+    \end{columns}
+
+    \vspace{0.35cm}
+
+    \begin{itemize}
+        \setlength\itemsep{0.18cm}
+
+        \item \textbf{SDG 9:} supports innovation by transforming advanced machine learning methods into reusable Python research infrastructure.
+
+        \item \textbf{SDG 4:} supports learning through documentation, examples, and practical implementation of advanced supervised learning methods.
+
+        \item \textbf{SDG 17:} supports collaboration and knowledge sharing through reusable software developed in an academic research environment.
+    \end{itemize}
+
+\end{frame}
+
+\subsection{Future Work}
+
+\begin{frame}[t]{Future Work}
+    \footnotesize
+
+    \begin{columns}[T,onlytextwidth]
+
+        \column{0.48\textwidth}
+        \begin{block}{Predictive Performance}
+            \begin{itemize}
+                \setlength\itemsep{0.12cm}
+                \item Tune clusters, divergences, local models, and combiner parameters.
+                \item Test advanced combiners such as GradientCOBRA, MixCOBRA, and stacking.
+                \item Increase diversity of base learners.
+                \item Perform ablation studies on K-step, F-step, and C-step.
+            \end{itemize}
+        \end{block}
+
+        \column{0.48\textwidth}
+        \begin{block}{Package Quality}
+            \begin{itemize}
+                \setlength\itemsep{0.12cm}
+                \item Improve tutorials, examples and documentation.
+                \item Improve scalability, runtime, and memory efficiency.
+                \item Expand unit tests and end-to-end workflow tests.
+                \item Complete and evaluate KFC–MixCOBRA integration.
+            \end{itemize}
+        \end{block}
+    \end{columns}
+
+    \vspace{0.25cm}
+
+    \begin{block}{Future Goal}
+        Make the package more reliable, scalable, and practical for future research and machine learning applications.
+    \end{block}
+
+\end{frame}

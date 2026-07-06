@@ -1,0 +1,27 @@
+\begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+
+        \fill[mainblue]
+        (current page.north west) rectangle ([yshift=-1.2cm]current page.north east);
+
+        \node[anchor=west, text=white] at ([xshift=0.7cm,yshift=-0.6cm]current page.north west)
+        {{\Large\bfseries Presentation Outline}};
+    \end{tikzpicture}
+
+    \vspace{1.25cm}
+
+    \begin{columns}[T,totalwidth=0.94\textwidth]
+        \begin{column}{0.48\textwidth}
+            \tableofcontents[sections={1-3},hideallsubsections]
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \tableofcontents[sections={4-6},hideallsubsections]
+        \end{column}
+    \end{columns}
+
+    % \vfill
+    % \begin{center}
+    % \small The presentation follows the thesis structure: motivation, methodology, implementation, experiments, and future work.
+    % \end{center}
+
+\end{frame}

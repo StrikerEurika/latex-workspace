@@ -1,0 +1,54 @@
+\begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+
+        \fill[white]
+        (current page.north west) rectangle ([yshift=-1.85cm]current page.north east);
+
+        \node[anchor=north west] at ([xshift=0.7cm,yshift=-0.22cm]current page.north west)
+        {\includegraphics[height=1.55cm]{figures/schools/itc.png}};
+
+        \node[anchor=north, align=center] at ([yshift=-0.30cm]current page.north)
+        {
+            {\fontsize{16}{18}\selectfont\bfseries \university}\\[0.20cm]
+            {\fontsize{11}{13}\selectfont \department}
+        };
+
+        \node[anchor=north east] at ([xshift=-0.7cm,yshift=-0.22cm]current page.north east)
+        {\includegraphics[height=1.65cm]{figures/schools/ams.png}};
+
+    \end{tikzpicture}
+
+    \vspace{2.0cm}
+
+    \begin{center}
+        \begin{tikzpicture}
+            \fill[mainblue, rounded corners=5pt]
+            (0,0) rectangle (14,1.82);
+
+            \node[align=center, text=white, text width=13cm] at (7,0.91)
+            {
+                {\Large\bfseries \presentationtitle}
+            };
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.25cm}
+
+    \begin{center}
+        \fontsize{12}{18}\selectfont
+        \begin{tabularx}{0.88\textwidth}{@{}>{\raggedright\arraybackslash}p{4.7cm} c >{\raggedright\arraybackslash}X@{}}
+            Organization       & : & \organization     \\
+            Internship Advisor & : & \advisor          \\
+            Company Supervisor & : & \supervisor       \\
+            Student Name       & : & \studentname      \\
+            Date               & : & \presentationdate \\
+        \end{tabularx}
+    \end{center}
+
+    \vfill
+
+    \begin{center}
+        {\fontsize{12}{18}\selectfont\bfseries Data Science Defence Presentation \\ Academic Year \academicyear}
+    \end{center}
+
+\end{frame}

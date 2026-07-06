@@ -1,0 +1,103 @@
+\section{EXPERIMENTAL RESULTS}
+\subsection{Experimental Design}
+
+\begin{frame}[t]{Experimental Design}
+\scriptsize
+\vspace{-0.12cm}
+\begin{block}{Evaluation Protocol}
+Models were evaluated using repeated train--test splits across five random seeds: 42, 52, 62, 72, and 82.
+\end{block}
+
+\vspace{0.08cm}
+\begin{table}
+\centering
+\renewcommand{\arraystretch}{1.04}
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{p{3.0cm} p{2.4cm} p{2.0cm} p{2.0cm} X}
+\toprule
+\textbf{Dataset} & \textbf{Task} & \textbf{Original Size} & \textbf{Rows Used} & \textbf{Features} \\
+\midrule
+Heart Disease & Classification & 1,025 & 302 & 13 \\
+Diabetes & Classification & 768 & 768 & 8 \\
+Loan Prediction & Classification & 614 & 614 & 11 \\
+Cyber Security Attacks & Classification & 40,000 & 5,000 & 18 \\
+Abalone & Regression & 4,177 & 4,177 & 8 \\
+California Housing & Regression & 20,640 & 5,000 & 12 \\
+Wind Turbine & Regression & 50,530 & 5,000 & 3 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{0.05cm}
+\begin{columns}[T,totalwidth=\textwidth]
+\begin{column}{0.48\textwidth}
+\textbf{Classification:} Accuracy, Precision, Recall, F1-score.
+\end{column}
+\begin{column}{0.48\textwidth}
+\textbf{Regression:} MAPE, RMSE, $R^2$, average target value.
+\end{column}
+\end{columns}
+\end{frame}
+
+\subsection{Classification Results}
+\begin{frame}[t]{Classification Results}
+\scriptsize
+\begin{table}
+\centering
+\renewcommand{\arraystretch}{1.16}
+\setlength{\tabcolsep}{3.8pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Dataset} & \textbf{KFCCC} & \textbf{LR} & \textbf{RFC} & \textbf{SVM} &  \textbf{CC} \\
+\midrule
+Heart Disease & \cellcolor{green!20}\textbf{0.819 $\pm$ 0.037} & 0.806 $\pm$ 0.032 & 0.806 $\pm$ 0.060 & 0.800 $\pm$ 0.042 & 0.768 $\pm$ 0.062 \\
+Diabetes & 0.757 $\pm$ 0.056 & 0.755 $\pm$ 0.047 & \cellcolor{green!20}\textbf{0.761 $\pm$ 0.036} & 0.753 $\pm$ 0.047 & 0.751 $\pm$ 0.050 \\
+Loan Prediction & 0.820 $\pm$ 0.030 & \cellcolor{green!20}\textbf{0.826 $\pm$ 0.024} & 0.795 $\pm$ 0.023 & 0.824 $\pm$ 0.024 & 0.821 $\pm$ 0.028 \\
+Cyber Security & 0.339 $\pm$ 0.013 & \cellcolor{green!20}\textbf{0.340 $\pm$ 0.006} & 0.333 $\pm$ 0.012 & \cellcolor{green!20}\textbf{0.340 $\pm$ 0.007} & 0.334 $\pm$ 0.004 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\vspace{0.12cm}
+\begin{block}{Key Interpretation}
+\begin{itemize}\setlength\itemsep{0.06cm}
+    \item \textbf{KFCCC} performs best on Heart Disease and remains competitive overall.
+    \item Baselines are stronger on some datasets, showing that clusterwise learning depends on dataset structure.
+    \item The result supports the need to compare KFC, COBRA, and standard baselines in one package.
+\end{itemize}
+\end{block}
+
+{\scriptsize \textbf{Note:} KFCCC = KFCClassifier-CombinedClassifier; LR = Logistic Regression; RFC = Random Forest Classifier; SVM = Support Vector Machine; CC = CombinedClassifier. Green cells indicate best mean accuracy.}
+\end{frame}
+
+\subsection{Regression Results}
+\begin{frame}[t]{Regression Results}
+\scriptsize
+\begin{table}
+\centering
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{5pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Dataset} & \textbf{KFCGC} & \textbf{MCR} & \textbf{GC} & \textbf{RFR} & \textbf{GBR} \\
+\midrule
+Abalone & \cellcolor{green!20}\textbf{0.560 $\pm$ 0.012} & 0.555 $\pm$ 0.018 & 0.550 $\pm$ 0.019 & 0.547 $\pm$ 0.021 & 0.537 $\pm$ 0.020 \\
+California Housing & 0.778 $\pm$ 0.009 & 0.805 $\pm$ 0.064 & 0.791 $\pm$ 0.054 & \cellcolor{green!20}\textbf{0.874 $\pm$ 0.007} & 0.858 $\pm$ 0.008 \\
+Wind Turbine & 0.843 $\pm$ 0.013 & \cellcolor{green!20}\textbf{0.876 $\pm$ 0.009} & 0.874 $\pm$ 0.009 & 0.872 $\pm$ 0.005 & \cellcolor{green!20}\textbf{0.876 $\pm$ 0.008} \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\vspace{0.12cm}
+\begin{block}{Key Interpretation}
+\begin{itemize}\setlength\itemsep{0.06cm}
+    \item \textbf{KFCGC} is strongest on Abalone and competitive on other regression datasets.
+    \item Random Forest and gradient-based baselines remain stronger on some larger datasets.
+    \item KFCGC is promising, but its benefit depends on meaningful subgroup structure.
+\end{itemize}
+\end{block}
+
+{\scriptsize \textbf{Note:} KFCGC = KFCRegressor-GradientCOBRA; MCR = MixCOBRARegressor; GC = GradientCOBRA; RFR = Random Forest Regressor; GBR = Gradient Boosting Regressor. Green cells indicate best mean $R^2$.}
+\end{frame}
