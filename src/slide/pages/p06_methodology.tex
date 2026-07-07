@@ -39,55 +39,175 @@
     \end{figure}
 \end{frame}
 
-\subsection{KFCProcedure Architecture and Usage}
-% =========================================================
-% KFCProcedure Architecture
-% =========================================================
-\begin{frame}[fragile,t]{KFCProcedure Architecture}
-    \footnotesize
-    \vspace{-0.5cm}
-    \begin{columns}[T,onlytextwidth]
+\subsection{Implementation Design Concept}
+\begin{frame}[fragile,t]{Implementation Design Concept}
+    \centering
+    \scriptsize
+    \vspace{-0.25cm}
 
-        % =========================
-        % Left: Architecture figure
-        % =========================
-        \column{0.50\textwidth}
-        \centering
-        \includegraphics[
-            width=\linewidth,
-            height=4.45cm,
-            keepaspectratio
-        ]{figures/architectures/kfc.png}
+    \resizebox{0.95\textwidth}{!}{%
+        \begin{tikzpicture}
 
-        % =========================
-        % Right: Engineering view
-        % =========================
-        \column{0.48\textwidth}
+            \node[parambox] (param) at (0,0) {
+                User Parameter\\
+                \texttt{"mean"}, \texttt{"rbf"}, \texttt{"mse"}
+            };
 
-        \textbf{Engineering View}
-        \vspace{0.10cm}
+            \node[factorybox] (factory) at (3.6,0) {
+                Factory\\
+                Selects component
+            };
 
-        \begin{itemize}
-            \setlength\itemsep{0.13cm}
+            \node[modulebox] (module) at (7.6,0) {
+                Concrete Module\\
+                Actual implementation
+            };
 
-            \item Implemented as a \textbf{three-stage estimator}:
-                  \[
-                      \texttt{KStep} \rightarrow \texttt{FStep} \rightarrow \texttt{CStep}
-                  \]
+            \node[basebox] (base) at (12.4,0) {
+                Base Class\\
+                Common interface
+            };
 
-            \item Each stage is separated into reusable modules for clustering, local modeling, and aggregation.
+            \draw[archarrow] (param) -- (factory);
+            \draw[archarrow] (factory) -- (module);
+            \draw[archdashed] (module) --
+            node[midway, above, font=\scriptsize, fill=white, inner sep=1pt] {inherits from}
+            (base);
 
-            \item The \textbf{C-step} uses a configurable combiner through a factory-based design.
+            \node[factorybox] (factoryex) at (3.6,-1.6) {
+                \texttt{CombinerFactory}\\
+                \texttt{KernelFactory}\\
+                \texttt{LossFactory}
+            };
 
-            \item Supports rule-based and learned combiners such as \texttt{mean}, \texttt{weighted\_mean}, \texttt{stacking}, and COBRA-based methods.
-        \end{itemize}
+            \node[modulebox] (moduleex) at (7.7,-1.6) {
+                \texttt{MeanCombiner}\\
+                \texttt{RBFKernel}\\
+                \texttt{MSELoss}
+            };
 
-    \end{columns}
+            \node[basebox] (baseex) at (12.4,-1.6) {
+                \texttt{BaseCombiner}\\
+                \texttt{BaseKernel}\\
+                \texttt{BaseLoss}
+            };
+
+            \draw[archarrow] (factory) -- (factoryex);
+            \draw[archarrow] (factoryex) -- (moduleex);
+            \draw[archdashed] (moduleex) --
+            node[midway, above, font=\scriptsize, fill=white, inner sep=1pt] {inherits from}
+            (baseex);
+
+        \end{tikzpicture}
+    }
 
     \vspace{0.25cm}
 
-    \begin{block}{Implementation Purpose}
-        KFCProcedure transforms clusterwise learning into a modular Python package where local models and aggregation strategies can be configured, replaced, and extended.
+    \begin{block}{Purpose}
+        The user provides simple parameter names, factories create the correct concrete modules, and base classes keep all components consistent and extensible.
+    \end{block}
+
+\end{frame}
+
+\subsection{KFCProcedure Architecture and Usage}
+
+\begin{frame}[fragile,t]{KFCProcedure Architecture}
+    \centering
+    \scriptsize
+    \vspace{-0.25cm}
+
+    \resizebox{0.96\textwidth}{!}{%
+        \begin{tikzpicture}
+
+            \node[mainbox] (kfc) at (0,0) {
+                \texttt{KFCProcedure}
+            };
+
+            % Row 1
+            \node[stepbox] (kstep) at (3.1,1.35) {
+                K-Step
+            };
+
+            \node[factorybox] (kfactory) at (6.3,1.35) {
+                Divergence\\
+                Factory
+            };
+
+            \node[modulebox] (kmodule) at (9.7,1.35) {
+                Divergence\\
+                Module
+            };
+
+            \node[basebox] (kbase) at (13.1,1.35) {
+                Base\\
+                Divergence
+            };
+
+            % Row 2
+            \node[stepbox] (fstep) at (3.1,0) {
+                F-Step
+            };
+
+            \node[factorybox] (ffactory) at (6.3,0) {
+                Model\\
+                Factory
+            };
+
+            \node[modulebox] (fmodule) at (9.7,0) {
+                Local Model\\
+                Module
+            };
+
+            \node[basebox] (fbase) at (13.1,0) {
+                Base\\
+                Local Model
+            };
+
+            % Row 3
+            \node[stepbox] (cstep) at (3.1,-1.35) {
+                C-Step
+            };
+
+            \node[factorybox] (cfactory) at (6.3,-1.35) {
+                Combiner\\
+                Factory
+            };
+
+            \node[modulebox] (cmodule) at (9.7,-1.35) {
+                Combiner\\
+                Module
+            };
+
+            \node[basebox] (cbase) at (13.1,-1.35) {
+                Base\\
+                Combiner
+            };
+
+            % Arrows from main
+            \draw[archarrow] (kfc) -- (kstep);
+            \draw[archarrow] (kfc) -- (fstep);
+            \draw[archarrow] (kfc) -- (cstep);
+
+            % Row arrows
+            \draw[archarrow] (kstep) -- (kfactory);
+            \draw[archarrow] (kfactory) -- (kmodule);
+            \draw[archdashed] (kmodule) -- (kbase);
+
+            \draw[archarrow] (fstep) -- (ffactory);
+            \draw[archarrow] (ffactory) -- (fmodule);
+            \draw[archdashed] (fmodule) -- (fbase);
+
+            \draw[archarrow] (cstep) -- (cfactory);
+            \draw[archarrow] (cfactory) -- (cmodule);
+            \draw[archdashed] (cmodule) -- (cbase);
+
+        \end{tikzpicture}
+    }
+
+    \vspace{0.20cm}
+
+    \begin{block}{Implementation Idea}
+        Each KFC stage uses a factory to select a concrete module, while the base class defines a consistent interface for extension.
     \end{block}
 
 \end{frame}
@@ -167,9 +287,117 @@
     \end{minted}
 \end{frame}
 
-\subsection{COBRA-Baseed Aggregation}
-\begin{frame}[t]{COBRA-Based Architecture}
-    \includegraphics[width=\linewidth]{figures/architectures/gradientcobra.png}
+\subsection{COBRA-Based Aggregation}
+
+\begin{frame}[fragile,t]{GradientCOBRA Implementation Architecture}
+    \centering
+    \scriptsize
+    \vspace{-0.25cm}
+
+    \resizebox{0.96\textwidth}{!}{%
+        \begin{tikzpicture}
+
+            \node[mainbox] (gcobra) at (0,0) {
+                \texttt{GradientCOBRA}
+            };
+
+            % Parameter layer
+            \node[parambox] (estimators) at (3.2,2.2) {\texttt{estimators}};
+            \node[parambox] (distance)   at (3.2,1.35) {\texttt{distance}};
+            \node[parambox] (kernel)     at (3.2,0.50) {\texttt{kernel}};
+            \node[parambox] (optimizer)  at (3.2,-0.35) {\texttt{optimizer}};
+            \node[parambox] (loss)       at (3.2,-1.20) {\texttt{loss}};
+            \node[parambox] (aggregator) at (3.2,-2.05) {\texttt{aggregator}};
+
+            % Factory layer
+            \node[factorybox] (estfactory)    at (6.5,2.2) {Estimator\\Factory};
+            \node[factorybox] (distfactory)   at (6.5,1.35) {Distance\\Factory};
+            \node[factorybox] (kernelfactory) at (6.5,0.50) {Kernel\\Factory};
+            \node[factorybox] (optfactory)    at (6.5,-0.35) {Optimizer\\Factory};
+            \node[factorybox] (lossfactory)   at (6.5,-1.20) {Loss\\Factory};
+            \node[factorybox] (aggfactory)    at (6.5,-2.05) {Aggregator\\Factory};
+
+            % Concrete module layer
+            \node[modulebox] (estmodule)    at (9.8,2.2) {Estimator\\Module};
+            \node[modulebox] (distmodule)   at (9.8,1.35) {Distance\\Module};
+            \node[modulebox] (kernelmodule) at (9.8,0.50) {Kernel\\Module};
+            \node[modulebox] (optmodule)    at (9.8,-0.35) {Optimizer\\Module};
+            \node[modulebox] (lossmodule)   at (9.8,-1.20) {Loss\\Module};
+            \node[modulebox] (aggmodule)    at (9.8,-2.05) {Aggregator\\Module};
+
+            % Base layer
+            \node[basebox] (baseest)    at (13.1,2.2) {Base\\Estimator};
+            \node[basebox] (basedist)   at (13.1,1.35) {Base\\Distance};
+            \node[basebox] (basekernel) at (13.1,0.50) {Base\\Kernel};
+            \node[basebox] (baseopt)    at (13.1,-0.35) {Base\\Optimizer};
+            \node[basebox] (baseloss)   at (13.1,-1.20) {Base\\Loss};
+            \node[basebox] (baseagg)    at (13.1,-2.05) {Base\\Aggregator};
+
+            \node[outputbox] (output) at (16.4,0) {
+                Final Prediction\\
+                \texttt{predict()}
+            };
+
+            % Bus coordinates
+            \coordinate (leftbus) at (1.75,0);
+            \coordinate (rightbus) at (14.65,0);
+
+            % Left bus
+            \draw[archarrow] (gcobra) -- (leftbus);
+            \draw[thick] (leftbus |- estimators) -- (leftbus |- aggregator);
+
+            \draw[archarrow] (leftbus |- estimators) -- (estimators);
+            \draw[archarrow] (leftbus |- distance) -- (distance);
+            \draw[archarrow] (leftbus |- kernel) -- (kernel);
+            \draw[archarrow] (leftbus |- optimizer) -- (optimizer);
+            \draw[archarrow] (leftbus |- loss) -- (loss);
+            \draw[archarrow] (leftbus |- aggregator) -- (aggregator);
+
+            % Parameter to factory
+            \draw[archarrow] (estimators) -- (estfactory);
+            \draw[archarrow] (distance) -- (distfactory);
+            \draw[archarrow] (kernel) -- (kernelfactory);
+            \draw[archarrow] (optimizer) -- (optfactory);
+            \draw[archarrow] (loss) -- (lossfactory);
+            \draw[archarrow] (aggregator) -- (aggfactory);
+
+            % Factory to module
+            \draw[archarrow] (estfactory) -- (estmodule);
+            \draw[archarrow] (distfactory) -- (distmodule);
+            \draw[archarrow] (kernelfactory) -- (kernelmodule);
+            \draw[archarrow] (optfactory) -- (optmodule);
+            \draw[archarrow] (lossfactory) -- (lossmodule);
+            \draw[archarrow] (aggfactory) -- (aggmodule);
+
+            % Module inherits from base
+            \draw[archdashed] (estmodule) -- (baseest);
+            \draw[archdashed] (distmodule) -- (basedist);
+            \draw[archdashed] (kernelmodule) -- (basekernel);
+            \draw[archdashed] (optmodule) -- (baseopt);
+            \draw[archdashed] (lossmodule) -- (baseloss);
+            \draw[archdashed] (aggmodule) -- (baseagg);
+
+            % Right bus to output
+            \draw[thick] (rightbus |- baseest) -- (rightbus |- baseagg);
+
+            \draw[archarrow] (baseest) -- (rightbus |- baseest);
+            \draw[archarrow] (basedist) -- (rightbus |- basedist);
+            \draw[archarrow] (basekernel) -- (rightbus |- basekernel);
+            \draw[archarrow] (baseopt) -- (rightbus |- baseopt);
+            \draw[archarrow] (baseloss) -- (rightbus |- baseloss);
+            \draw[archarrow] (baseagg) -- (rightbus |- baseagg);
+
+            \draw[archarrow] (rightbus) -- (output);
+
+        \end{tikzpicture}
+    }
+
+    \vspace{0.18cm}
+
+    \begin{block}{Implementation Idea}
+        GradientCOBRA resolves each parameter through a factory, creates concrete modules, and keeps all modules extensible through base interfaces.
+    \end{block}
+
 \end{frame}
 
 \begin{frame}[t]{COBRA-Based Usage}
@@ -233,9 +461,99 @@
 \end{frame}
 
 \subsection{Hybrid Workflow}
-\begin{frame}[t]{Hybrid KFCProcedure and GradientCOBRA Workflow}
+
+\begin{frame}[fragile,t]{Hybrid KFCProcedure and GradientCOBRA Workflow}
     \centering
-    \includegraphics[height=6.5cm, width=0.8\textwidth]{figures/architectures/hybrid.png}
+    \scriptsize
+    \vspace{-0.25cm}
+
+    \resizebox{0.96\textwidth}{!}{%
+        \begin{tikzpicture}
+
+            \node[mainbox] (data) at (0,0) {
+                Input Data\\
+                $X, y$
+            };
+
+            \node[stepbox] (kstep) at (3.3,1.15) {
+                K-Step\\
+                Clustering
+            };
+
+            \node[stepbox] (fstep) at (6.6,1.15) {
+                F-Step\\
+                Local Models
+            };
+
+            \node[stepbox] (localpred) at (9.9,1.15) {
+                Local\\
+                Predictions
+            };
+
+            \node[stepbox] (cstep) at (13.2,1.15) {
+                C-Step\\
+                Combiner
+            };
+
+            \node[modulebox] (gcobra) at (6.6,-1.25) {
+                GradientCOBRA\\
+                Module
+            };
+
+            \node[modulebox] (predspace) at (9.9,-1.25) {
+                Prediction\\
+                Space
+            };
+
+            \node[modulebox] (similarity) at (13.2,-1.25) {
+                Kernel / Distance\\
+                Similarity
+            };
+
+            \node[modulebox] (optimize) at (16.5,-1.25) {
+                Optimized\\
+                Aggregation
+            };
+
+            \node[outputbox] (final) at (16.5,1.15) {
+                Final Prediction\\
+                \texttt{predict()}
+            };
+
+            % KFC pipeline
+            \draw[archarrow] (data) -- (kstep);
+            \draw[archarrow] (kstep) -- (fstep);
+            \draw[archarrow] (fstep) -- (localpred);
+            \draw[archarrow] (localpred) -- (cstep);
+            \draw[archarrow] (cstep) -- (final);
+
+            % COBRA plug-in
+            \draw[archdashed] (cstep) --
+            node[midway, right, font=\scriptsize, fill=white, inner sep=1pt] {plug-in}
+            (gcobra);
+
+            \draw[archarrow] (gcobra) -- (predspace);
+            \draw[archarrow] (predspace) -- (similarity);
+            \draw[archarrow] (similarity) -- (optimize);
+            \draw[archarrow] (optimize) -- (final);
+
+            \begin{scope}[on background layer]
+                \node[archgroup, fit=(kstep)(fstep)(localpred)(cstep),
+                    label={[grouplabel]above:KFCProcedure Pipeline}] {};
+
+                \node[archgroup, fit=(gcobra)(predspace)(similarity)(optimize),
+                    label={[grouplabel]below:COBRA-Based Aggregation Module}] {};
+            \end{scope}
+
+        \end{tikzpicture}
+    }
+
+    \vspace{0.20cm}
+
+    \begin{block}{Hybrid Idea}
+        KFCProcedure performs clusterwise learning, while GradientCOBRA can be plugged into the C-step to aggregate local predictions using prediction-space similarity.
+    \end{block}
+
 \end{frame}
 
 \subsection{Modular and Extensible Design}

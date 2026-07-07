@@ -2,113 +2,7 @@
 
 \subsection{Background}
 
-\subsection{Background}
-
-\begin{frame}[t]{Background}
-    \footnotesize
-
-    \begin{columns}[T,onlytextwidth]
-
-        % =========================
-        % Left: Message
-        % =========================
-        \column{0.42\textwidth}
-
-        \textbf{Motivation}
-        \vspace{0.12cm}
-
-        \begin{itemize}
-            \setlength\itemsep{0.18cm}
-            \item Machine learning is widely used for classification and regression tasks.
-            \item Many traditional models learn a \textbf{single global pattern} from the full dataset.
-            \item However, real-world data may contain \textbf{heterogeneous subgroups} with different local behaviors.
-            \item As a result, one global model may not capture all local patterns effectively.
-            \item This motivates the need for \textbf{clusterwise learning}.
-        \end{itemize}
-
-        \vspace{0.18cm}
-
-        % =========================
-        % Right: Conceptual diagram
-        % =========================
-        \column{0.56\textwidth}
-
-        \centering
-        \resizebox{\linewidth}{!}{
-            \begin{tikzpicture}[
-                    font=\scriptsize,
-                    panel/.style={draw=blue!50, rounded corners=4pt, minimum width=4.1cm, minimum height=3.2cm},
-                    title/.style={font=\scriptsize\bfseries},
-                    global/.style={thick, black},
-                    locala/.style={thick, red},
-                    localb/.style={thick, green!50!black},
-                    localc/.style={thick, blue},
-                    ptA/.style={circle, fill=red!65, inner sep=1.5pt},
-                    ptB/.style={circle, fill=green!60!black, inner sep=1.5pt},
-                    ptC/.style={circle, fill=blue!65, inner sep=1.5pt}
-                ]
-
-                % Panel 1
-                \node[panel] (p1) at (0,0) {};
-                \node[title] at (0,1.75) {Traditional Global Model};
-
-                % points
-                \node[ptA] at (-1.3,0.5) {};
-                \node[ptA] at (-1.0,0.8) {};
-                \node[ptA] at (-0.8,0.4) {};
-
-                \node[ptB] at (0.0,-0.1) {};
-                \node[ptB] at (0.3,0.2) {};
-                \node[ptB] at (0.5,-0.2) {};
-
-                \node[ptC] at (1.2,-0.8) {};
-                \node[ptC] at (1.4,-0.5) {};
-                \node[ptC] at (1.0,-1.0) {};
-
-                % one global fit
-                \draw[global] (-1.6,1.0) -- (1.6,-1.05);
-                \node[font=\tiny] at (0,-1.75) {Single model for all samples};
-
-                % Panel 2
-                \node[panel] (p2) at (5.2,0) {};
-                \node[title] at (5.2,1.75) {Heterogeneous Data Structure};
-
-                % cluster A
-                \node[ptA] at (4.0,0.8) {};
-                \node[ptA] at (4.2,0.5) {};
-                \node[ptA] at (4.5,0.9) {};
-                \draw[red,dashed,rounded corners] (3.75,0.25) rectangle (4.8,1.15);
-
-                % cluster B
-                \node[ptB] at (5.1,-0.1) {};
-                \node[ptB] at (5.4,0.2) {};
-                \node[ptB] at (5.7,-0.2) {};
-                \draw[green!50!black,dashed,rounded corners] (4.85,-0.45) rectangle (5.95,0.45);
-
-                % cluster C
-                \node[ptC] at (6.3,-0.9) {};
-                \node[ptC] at (6.6,-0.6) {};
-                \node[ptC] at (6.0,-1.0) {};
-                \draw[blue,dashed,rounded corners] (5.85,-1.25) rectangle (6.85,-0.35);
-
-                % local patterns
-                \draw[locala] (3.85,0.55) -- (4.65,0.95);
-                \draw[localb] (4.95,-0.20) -- (5.75,0.15);
-                \draw[localc] (5.95,-1.05) -- (6.65,-0.60);
-
-                \node[font=\tiny] at (5.2,-1.75) {Different local groups may need different models};
-
-            \end{tikzpicture}
-        }
-    \end{columns}
-
-    {\scriptsize
-        \textbf{Transition:} This motivation leads to the development of \textbf{KFCProcedure} \cite{has2021kfc}.
-    }
-
-\end{frame}
-
-\begin{frame}[t]{KFCProcedure Algorithm Workflow}
+\begin{frame}[t]{Background: KFCProcedure Algorithm Workflow}
     \footnotesize
     \centering
 
@@ -212,38 +106,135 @@
 
     \vspace{0.45cm}
 
-    {\scriptsize
-        \textbf{Key idea:} KFCProcedure provides the clusterwise workflow, while COBRA provides the reusable combiner for the C-step.
-    }
-
-\end{frame}
-
-
-\begin{frame}[t]{Problem Statement}
-    \small
-
-    \vspace{0.2cm}
-    \textbf{Main Problem : }
-
-    \vspace{0.25cm}
-
-    \begin{enumerate}
-        \item How should predictions from local models be combined effectively?
-
-        \item How can a machine learning package support clusterwise learning?
-
-        \item How can multiple aggregation strategies be unified in one framework?
-    \end{enumerate}
-
-    \vspace{0.35cm}
-
-    \begin{block}{Project Focus}
-        KFCProcedure provides a modular structure for local learning,
-        prediction aggregation, and extensible model development.
+    \begin{block}{Key idea}
+        KFCProcedure provides the clusterwise workflow, while COBRA provides the reusable combiner for the C-step.
     \end{block}
 
 \end{frame}
 
+\begin{frame}[t]{Background: GradientCOBRA Algorithm Workflow}
+    \centering
+    \scriptsize
+    \vspace{-0.20cm}
+
+    \resizebox{0.96\textwidth}{!}{%
+        \begin{tikzpicture}[
+                box/.style={
+                        rectangle,
+                        rounded corners=6pt,
+                        thick,
+                        align=center,
+                        minimum width=2.45cm,
+                        minimum height=0.78cm,
+                        font=\scriptsize
+                    },
+                data/.style={
+                        box,
+                        draw=blue!70,
+                        fill=blue!8
+                    },
+                train/.style={
+                        box,
+                        draw=orange!85!black,
+                        fill=orange!10
+                    },
+                agg/.style={
+                        box,
+                        draw=green!55!black,
+                        fill=green!10
+                    },
+                output/.style={
+                        box,
+                        draw=purple!70,
+                        fill=purple!8
+                    },
+                arrow/.style={
+                        -{Latex[length=1.8mm]},
+                        thick
+                    },
+            ]
+
+            % =========================
+            % Input
+            % =========================
+            \node[data] (data) at (0,0) {
+                Input\\Data
+            };
+
+            % =========================
+            % Training row
+            % =========================
+            \node[train] (trainset) at (3.4,1.35) {
+                Training\\Set
+            };
+
+            \node[train] (estimator) at (6.6,1.35) {
+                Estimators\\
+                $M_1,\ldots,M_K$
+            };
+
+            % =========================
+            % Aggregation row
+            % =========================
+            \node[agg] (aggset) at (3.4,-1.35) {
+                Aggregation\\Set
+            };
+
+            \node[agg] (predspace) at (6.6,-1.35) {
+                Prediction\\Space
+            };
+
+            \node[agg] (similarity) at (9.8,-1.35) {
+                Similarity\\Measure
+            };
+
+            \node[agg] (optimize) at (13.0,-1.35) {
+                Optimize\\Weight
+            };
+
+            \node[agg] (aggregate) at (16.2,-1.35) {
+                COBRA\\Aggregation
+            };
+
+            \node[output] (final) at (19.4,-1.35) {
+                Final\\Prediction
+            };
+
+            % =========================
+            % Split from input data
+            % =========================
+            \draw[arrow] (data) -- (trainset);
+            \draw[arrow] (data) -- (aggset);
+
+            % =========================
+            % Training flow
+            % =========================
+            \draw[arrow] (trainset) -- (estimator);
+
+            % =========================
+            % Estimators feed prediction space
+            % =========================
+            \draw[arrow] (estimator) -- (predspace);
+
+            % =========================
+            % Aggregation flow
+            % =========================
+            \draw[arrow] (aggset) -- (predspace);
+            \draw[arrow] (predspace) -- (similarity);
+            \draw[arrow] (similarity) -- (optimize);
+            \draw[arrow] (optimize) -- (aggregate);
+            \draw[arrow] (aggregate) -- (final);
+
+        \end{tikzpicture}
+    }
+
+    \vspace{0.30cm}
+
+    \begin{block}{Key idea}
+        GradientCOBRA uses trained estimators to create a prediction space, then measures similarity and optimizes aggregation to produce the final prediction.
+    \end{block}
+
+\end{frame}
 
 
 \subsection{Objective}

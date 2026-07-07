@@ -22,7 +22,74 @@
 \setbeamertemplate{bibliography item}{}
 \renewcommand*{\bibfont}{\scriptsize}
 
-\usetikzlibrary{positioning, arrows.meta, shapes.geometric}
+\usetikzlibrary{positioning, arrows.meta, shapes.geometric, fit, backgrounds, calc}
+
+\tikzset{
+    archbox/.style={
+        rectangle,
+        rounded corners=6pt,
+        thick,
+        align=center,
+        minimum width=2.75cm,
+        minimum height=0.72cm,
+        font=\scriptsize
+    },
+    mainbox/.style={
+        archbox,
+        draw=blue!70,
+        fill=blue!8
+    },
+    stepbox/.style={
+        archbox,
+        draw=teal!70!black,
+        fill=teal!8
+    },
+    parambox/.style={
+        archbox,
+        draw=teal!70!black,
+        fill=teal!8
+    },
+    factorybox/.style={
+        archbox,
+        draw=purple!75,
+        fill=purple!8
+    },
+    modulebox/.style={
+        archbox,
+        draw=green!60!black,
+        fill=green!8
+    },
+    basebox/.style={
+        archbox,
+        draw=orange!85!black,
+        fill=orange!10
+    },
+    outputbox/.style={
+        archbox,
+        draw=blue!70,
+        fill=blue!8
+    },
+    archarrow/.style={
+        -{Latex[length=1.8mm]},
+        thick
+    },
+    archdashed/.style={
+        -{Latex[length=1.8mm]},
+        thick,
+        dashed
+    },
+    archgroup/.style={
+        rounded corners=8pt,
+        draw=gray!60,
+        dashed,
+        inner sep=7pt
+    },
+    grouplabel/.style={
+        font=\bfseries\scriptsize,
+        fill=white,
+        inner sep=2pt
+    }
+}
 
 \usetheme{Madrid}
 \useinnertheme{rounded}
