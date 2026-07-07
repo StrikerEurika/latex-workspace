@@ -17,7 +17,7 @@
 
 % references slide
 \begin{frame}[plain,noframenumbering]
-    
+
     \vspace{-0.5cm}
     \large\color{mainblue}\textbf{References}
     \vspace{0.2cm}
@@ -330,7 +330,7 @@
 
                 Radial / RBF
                                 &
-                \( K(D)=\exp(-D) \)                  \\
+                \( K(D)=\exp(-D^2) \)                  \\
 
                 Exponential
                                 &
@@ -342,7 +342,7 @@
 
                 Cauchy
                                 &
-                \( K(D)=\dfrac{1}{1+D} \)            \\
+                \( K(D)=\dfrac{1}{1+D^2} \)            \\
 
                 Triangular
                                 &
@@ -367,7 +367,6 @@
 
 \begin{frame}[plain,noframenumbering]
     \scriptsize
-    \vspace{-0.25cm}
     {\Large\color{mainblue}\textbf{Appendix D: Optimization and Aggregation Modules}}
     \begin{columns}[T,onlytextwidth]
 
@@ -456,6 +455,69 @@
                 {\sum_i W_{qi}}
             \]
         \end{block}
+
+    \end{columns}
+
+\end{frame}
+
+% =========================================================
+% Appendix: Evaluation Metrics
+% =========================================================
+\appendix
+
+\begin{frame}[t]
+    \scriptsize
+    \vspace{0.25cm}
+    {\Large\color{mainblue}\textbf{Appendix E: Evaluation Metrics}}
+
+    \begin{columns}[T,onlytextwidth]
+
+        % =========================
+        % Classification Metrics
+        % =========================
+        \begin{column}{0.48\textwidth}
+            \textbf{Classification Metrics}
+
+            \vspace{0.2cm}
+
+            \begin{align*}
+                \text{Accuracy}  & = \frac{TP + TN}{TP + TN + FP + FN}                    \\[0.15cm]
+                \text{Precision} & = \frac{TP}{TP + FP}                                   \\[0.15cm]
+                \text{Recall}    & = \frac{TP}{TP + FN}                                   \\[0.15cm]
+                F_1              & = 2 \times \frac{\text{Precision} \times \text{Recall}}
+                                              {\text{Precision} + \text{Recall}}
+            \end{align*}
+
+            \vspace{0.1cm}
+
+            \textit{where} $TP$, $TN$, $FP$, and $FN$ represent true positive, true negative, false positive, and false negative.
+
+        \end{column}
+
+        % =========================
+        % Regression Metrics
+        % =========================
+        \begin{column}{0.48\textwidth}
+            \textbf{Regression Metrics}
+
+            \vspace{0.2cm}
+
+            \begin{align*}
+                \text{MAPE} & = \frac{100}{n}\sum_{i=1}^{n}
+                \left|\frac{y_i - \hat{y}_i}{y_i}\right|       \\[0.15cm]
+                \text{RMSE} & = \sqrt{\frac{1}{n}\sum_{i=1}^{n}
+                                    (y_i - \hat{y}_i)^2} \\[0.15cm]
+                R^2         & = 1 -
+                \frac{\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}
+                {\sum_{i=1}^{n}(y_i - \bar{y})^2}        \\[0.15cm]
+                \bar{y}     & = \frac{1}{n}\sum_{i=1}^{n} y_i
+            \end{align*}
+
+            \vspace{0.1cm}
+
+            \textit{where} $y_i$ is the actual value, $\hat{y}_i$ is the predicted value, and $\bar{y}$ is the average target value.
+
+        \end{column}
 
     \end{columns}
 

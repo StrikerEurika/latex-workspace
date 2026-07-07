@@ -219,29 +219,32 @@
 \end{frame}
 
 
-\subsection{Problem Statement}
-
 \begin{frame}[t]{Problem Statement}
-    \footnotesize
-    \begin{itemize}
-        \setlength\itemsep{0.22cm}
+    \small
 
-        \item \textbf{Lack of unified architecture for aggregation methods}
+    \vspace{0.2cm}
+    \textbf{Main Problem : }
 
-              Different aggregation strategies such as averaging, voting, and COBRA-based methods need a consistent structure for implementation and comparison.
+    \vspace{0.25cm}
 
-        \item \textbf{Limited modularity and extensibility}
+    \begin{enumerate}
+        \item How should predictions from local models be combined effectively?
 
-              Without a reusable package design, adding new base estimators, clustering methods, or combiner strategies becomes difficult and less maintainable.
-    \end{itemize}
+        \item How can a machine learning package support clusterwise learning?
 
-    \vspace{0.18cm}
+        \item How can multiple aggregation strategies be unified in one framework?
+    \end{enumerate}
 
-    \begin{block}{Engineering Need}
-        A modular machine learning package is needed to support clusterwise learning, local model training, and flexible prediction aggregation.
+    \vspace{0.35cm}
+
+    \begin{block}{Project Focus}
+        KFCProcedure provides a modular structure for local learning,
+        prediction aggregation, and extensible model development.
     \end{block}
 
 \end{frame}
+
+
 
 \subsection{Objective}
 
