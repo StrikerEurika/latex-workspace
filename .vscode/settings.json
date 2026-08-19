@@ -2,22 +2,17 @@
   // =========================================================
   // BUILD
   // =========================================================
-  "latex-workshop.latex.autoBuild.run": "onSave",
-
-  // Output build files to root build folder
-  "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/",
-
+  "latex-workshop.latex.autoBuild.run": "onFileChange",
+  // Keep each source project in its own viewer-tracked output directory.
+  "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/ngt",
   // Rebuild also when .sty, .cls, .bib files are saved
   "latex-workshop.latex.autoBuild.onSave.files.ignore": [],
-
   // Important for multi-folder src structure
   "latex-workshop.latex.rootFile.useSubFile": false,
-
   // =========================================================
   // RECIPES
   // =========================================================
   "latex-workshop.latex.recipe.default": "general: xelatex + biber",
-
   "latex-workshop.latex.recipes": [
     {
       "name": "general: xelatex + biber",
@@ -32,7 +27,6 @@
       ]
     }
   ],
-
   // =========================================================
   // TOOLS
   // =========================================================
@@ -44,6 +38,7 @@
         "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
         "%DOC%",
         "%WORKSPACE_FOLDER%",
+        "%OUTDIR%",
         "full"
       ],
       "env": {}
@@ -55,37 +50,35 @@
         "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
         "%DOC%",
         "%WORKSPACE_FOLDER%",
+        "%OUTDIR%",
         "fast"
       ],
       "env": {}
     }
   ],
-
   // =========================================================
   // VIEWER & SYNCTEX
   // =========================================================
   "latex-workshop.view.pdf.viewer": "tab",
   "latex-workshop.synctex.afterBuild.enabled": true,
-
   // =========================================================
   // FORMATTING
   // =========================================================
   "latex-workshop.formatting.latex": "latexindent",
-
   // =========================================================
   // CLEAN
   // =========================================================
   "latex-workshop.latex.autoClean.run": "never",
-
   // =========================================================
   // EDITOR QUALITY OF LIFE
   // =========================================================
   "latex-workshop.intellisense.package.enabled": true,
   "latex-workshop.latex.autoBuild.interval": 1000,
-
   "[latex]": {
     "editor.formatOnSave": false,
     "editor.wordWrap": "on",
-    "editor.rulers": [100]
+    "editor.rulers": [
+      100
+    ]
   }
 }

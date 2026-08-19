@@ -1,17 +1,20 @@
 #!/bin/bash
 set -e
 
-# Usage: build-latex.shproject-name|path-to-main.tex|path-to-project-dir> [workspace] [mode] [clean]
+# Usage: build-latex.sh <project-name|path-to-main.tex|path-to-project-dir> [workspace] [outdir] [mode] [clean]
 # Mode: 'incremental' (default), 'fast', 'watch' (auto-compile on changes), or 'clean' to force rebuild
 
 DOC_ARG="$1"
 WORKSPACE="${2:-/workspace}"
-MODE="${3:-incremental}"
-CLEAN="$4"
+OUTDIR_ARG="$3"
+MODE="${4:-incremental}"
+CLEAN="$5"
 
 # Handle input paths
 if [[ -f "$DOC_ARG" ]]; then
   DOC="$DOC_ARG"
+elif [[ -f "$DOC_ARG.tex" ]]; then
+  DOC="$DOC_ARG.tex"
 elif [[ -d "$DOC_ARG" ]]; then
   DOC="$DOC_ARG/main.tex"
 elif [[ -d "$WORKSPACE/src/$DOC_ARG" ]]; then
@@ -26,9 +29,10 @@ else
 fi
 
 DOC_DIR="$(dirname "$DOC")"
-DOC_BASE="${DOC_FAKEFILENAME%.tex}"
+DOC_FILE="$(basename "$DOC")"
+DOC_BASE="${DOC_FILE%.tex}"
 PROJECT_NAME="$(basename "$DOC_DIR")"
-OUTDIR="$WORKSPACE/build/$PROJECT_NAME"
+OUTDIR="${OUTDIR_ARG:-$WORKSPACE/build/$PROJECT_NAME}"
 
 # Clean build if requested
 if [[ "$CLEAN" == "clean" ]] || [[ "$MODE" == "clean" ]]; then
@@ -60,7 +64,6 @@ build_pdf() {
     -halt-on-error \
     -synctex=1 \
     -shell-escape \
-    -aux-directory="$OUTDIR" \
     -output-directory="$OUTDIR" \
     "$DOC" || exit 1
 
@@ -74,7 +77,6 @@ build_pdf() {
     -halt-on-error \
     -synctex=1 \
     -shell-escape \
-    -aux-directory="$OUTDIR" \
     -output-directory="$OUTDIR" \
     "$DOC" || exit 1
 
@@ -83,7 +85,6 @@ build_pdf() {
     -halt-on-error \
     -synctex=1 \
     -shell-escape \
-    -aux-directory="$OUTDIR" \
     -output-directory="$OUTDIR" \
     "$DOC" || exit 1
 }

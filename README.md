@@ -350,7 +350,9 @@ Recommended `.vscode/settings.json`:
 
 ```json
 {
-  "latex-workshop.latex.autoBuild.run": "never",
+  "latex-workshop.latex.autoBuild.run": "onFileChange",
+
+  "latex-workshop.latex.autoBuild.interval": 1000,
 
   "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build",
 
