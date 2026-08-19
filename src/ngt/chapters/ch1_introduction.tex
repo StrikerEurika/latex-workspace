@@ -1,35 +1,28 @@
 \chapter{INTRODUCTION}
 
+\hs This chapter provides a general introduction to the host company of the Internship I in year 4 of department of \textbf{Mathematics and Statistics (AMS)}, including its background, key characteristics, and organizational structure. It then narrows the focus to the specific problem addressed during the internship, with a clear definition of the project's objectives and scope. A chronological overview of the internship schedule is also presented, outlining major milestones as well as daily responsibilities. In addition, the primary tools and technologies employed throughout the project are described, along with their main features, and any constraints or regulatory requirements that influenced the work are examined.
+
 \section{Presentation of Internship}
-
-\hs I completed my internship at the \textbf{Research and Data Analytics (ReDA) Lab}, an interdisciplinary research laboratory under the \textbf{Department of Applied Mathematics and Statistics} at the \textbf{Institute of Technology of Cambodia (ITC)}. The internship lasted four months, from 23 February 2026 to 23 June 2026. During this period, I worked in a research-oriented environment where data science, machine learning, and software development were applied to academic and practical problems.
-
-The internship project was titled \textit{Python Libraries for Clusterwise Predictive Models: KFCProcedure and GradientCOBRA}. The project focused on the design and development of Python libraries for clusterwise predictive modeling and ensemble aggregation. More specifically, it involved two main components: \textbf{\textit{KFCProcedure}}, a modular framework for clusterwise learning, and \textbf{\textit{GradientCOBRA}}, a framework related to COBRA-based aggregation methods. These libraries were developed to support experiments on complex and heterogeneous datasets, where a single global predictive model may not be sufficient to capture different underlying data patterns.
-
-ReDA Lab provided an environment that supported both research and practical implementation. It allowed students and researchers to work on data-driven projects while developing technical skills through experimentation and software development. Being part of this environment helped me better understand how machine learning methods can be transformed from theoretical concepts into usable computational tools.
-
-Throughout the internship, I gained practical experience in both machine learning research and software development. My tasks included reviewing research papers on clusterwise learning and aggregation methods, analyzing existing implementations, designing a modular system architecture, implementing algorithms, and evaluating models using simulated and real-world datasets. Overall, this experience helped me connect theoretical knowledge in data science with practical implementation in a research software project.
 
 \subsection{Objective of Internship}
 
-\hs The main objective of this internship was to gain both theoretical and practical experience in \textbf{data science} and \textbf{machine learning} through the implementation and evaluation of aggregation-based supervised learning methods. More specifically, the internship aimed to bridge the gap between statistical learning concepts and software implementation through the development of modular Python libraries.
+\hs Build an accurate, precise, and practically deployable AI model to detect and segment cracks presenting on
+large buildings, contributing to reduced infrastructural improvement, early maintenance and public safety.
 
-The internship focused on the study, implementation, and evaluation of advanced ensemble and aggregation techniques, including \textbf{CombinedClassifier}, \textbf{\textit{KFCProcedure}}, and \textbf{\textit{GradientCOBRA}}. It also involved analyzing the relationship between these methods and related aggregation approaches such as \textbf{\textit{MixCOBRA}}. This work helped organize different learning and aggregation strategies under a common, extensible, and object-oriented architecture. Through this process, I improved my Python programming skills and strengthened my ability to design reusable, maintainable, and well-structured code.
-
-To achieve this general objective, the internship was structured around the following specific objectives:
+This project aims to design and validate a deep learning framework for automatic, pixel-level crack
+segmentation in high-resolution aerial imagery. Specific goals are to:
 
 \begin{itemize}
-    \item To study the theoretical foundations of supervised learning, including regression and classification tasks, and to understand the role of aggregation methods in improving predictive performance.
-    \item To analyze existing source code and identify methodological similarities among MixCOBRA and GradientCOBRA
-    \item To develop reusable Python libraries under a unified application programming interface and empirically test their performance.
-    \item To evaluate and validate the performance of the developed libraries through algorithmic experiments on simulated and real-world datasets.
+    \item Develop an empirical experiment on segmentation and detection models using modified Semantic Segmentation Models, Instance Segmentation models, and transformer-based models that are capable of capturing fine cracks on high-resolution images.
+    \item Implement a tile-based inference pipeline with blended overlaps, allowing seamless processing of arbitrarily large-scale, high-resolution images on a single GPU.
+    \item Evaluate the system on multiple real-world aerial crack datasets, comparing against published baselines.
 \end{itemize}
 
 \subsection{Duration of Internship}
 
-\hs The internship was carried out over a period of four months, starting from 23 February 2026 and ending on 23 June 2026. During this period, I was involved in research and development activities at ReDA Lab.
+\hs The internship was carried out over a period of 3 months, commencing on \textbf{1 July 2026} and ending on \textbf{30 September 2026}. During this period, the internship was involved in research and development activities at Company's Engineer Lab.
 
-This duration allowed me to gradually understand the project, beginning with literature review and problem analysis, followed by implementation, testing, and evaluation of the proposed system. It also provided enough time to gain hands-on experience and adapt to the research environment.
+This duration included activities such as defining the project, beginning with literature review and problem analysis, followed by implementation, testing, and evaluation of the proposed system. It also provided enough time to gain hands-on experience and adapt to the research and development environment.
 
 \section{Presentation of Organization}
 
@@ -37,61 +30,42 @@ This duration allowed me to gradually understand the project, beginning with lit
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{figures/schools/reda-logo.png}
-    \caption{ReDA Lab Logo}
-    \label{fig:reda-logo}
+    \includegraphics[width=0.3\textwidth]{figures/company/AI-FARM-Logo.png}
+    \caption{\textit{AI Farm Robotics co. ltd.}}
+    \label{fig:ai-farm-logo}
 \end{figure}
 
-\hs As shown in Figure~\ref{fig:reda-logo}, the \textbf{Research and Data Analytics (ReDA) Laboratory} is a research and development laboratory under the \textbf{Department of Applied Mathematics and Statistics (AMS)} at the \textbf{Institute of Technology of Cambodia (ITC)}. It is located in Room F201, ITC, Russian Federation Boulevard (110), Phnom Penh 120404, Cambodia. The laboratory focuses on research, innovation, and practical applications in data science, artificial intelligence, machine learning, and analytics.
-
-ReDA Lab provides an academic and research-oriented environment where students, researchers, and faculty members collaborate on applied projects. The laboratory supports the development of intelligent systems and data-driven solutions for education, business, industry, and public sector challenges in Cambodia. In this thesis, the internship work was conducted at ReDA Lab under the guidance of the laboratory team.
+\hs \textbf{AI Farm Robotics (AI Farm Co., Ltd.)} is a technology-driven robotics manufacturing company based in Phnom Penh, Cambodia. Operating as a subsidiary of the Khamsa Group of Businesses (KGB), the firm was founded to drive national technological sovereignty and transform Cambodia into a prominent robotics nation in Asia. The company's headquarters and primary research facility are located at \textbf{Connexion Building First Floor, Street Koh Pich, Sangkat
+Tonle Bassac, Khan Chamkar Mon, Phnom Penh, Cambodia}. From this hub, the company spearheads local innovation by specializing in the research and development of artificial intelligence, automated machinery, robot arms, mobile robots, drones, and tailored industrial automation systems.The company actively focuses on supporting micro, small, and medium enterprises (MSMEs) through flexible business models, including custom engineering, manufacturing, and Robot as a Service (RaaS) deployments. Beyond commercial production, AI Farm Robotics plays a vital role in national capacity building by running educational programs like the Robot Young Academy and dedicated STEM courses. These initiatives are designed to upskill the local workforce, prepare students for the digital economy, and close the technological gap in the region. By collaborating with domestic and international universities, trade organizations, and government bodies, the company continues to expand its technological portfolio and accelerate automated industrial adoption across Southeast Asia.
 
 \subsection{Services and Functions of the Organization}
 
-ReDA Lab serves several important functions in academic research and innovation:
+\textbf{AI FARM Robotics} is an innovative technology and automation leading company based in Phnom Penh, Cambodia. The company specializes in artificial intelligence, robotics, and advanced engineering solutions tailored to modernize businesses. By combining local capacity building with cutting-edge technology, it helps micro, small, and medium enterprises (MSMEs) transition into automated environments. The company bridges the gap between complex technology and practical application through five core pillars of service:
 
 \begin{itemize}
-    \item \textbf{Academic Research Center:} conducting research in data science, artificial intelligence, computer vision, machine learning, and analytics.
-    \item \textbf{Research and Development Hub:} developing prototypes, intelligent systems, and practical AI solutions for applied problems.
-    \item \textbf{Student Innovation Platform:} providing opportunities for students to participate in research projects, develop technical skills, and apply theoretical knowledge in practice.
-    \item \textbf{Collaboration and Knowledge-Sharing Center:} encouraging cooperation among students, faculty members, and external partners through structured research activities and laboratory projects.
+    \item \textbf{Strategic Consulting:} cDesigning customized automation and AI strategies for local businesses and aAnalyzing existing workflows to identify high-impact areas for robot implementation.
+    \item \textbf{Engineering and System Integration:} Building and customizing physical robot frameworks and industrial components and installing and configuring automated machinery directly into business environments.
+    \item \textbf{Software and AI Development:} Training intelligent models for data processing, computer vision, and predictive mechanics and developing localized, responsive algorithms and adaptive code creators for autonomous navigation.
+    \item \textbf{Robot-as-a-Service (RaaS):} Providing operational service robots on a subscription or utility basis to lower upfront costs and deploying specialized automated cooking assistants, barista bots, and indoor delivery units.
+    \item \textbf{Education and Capacity Building:} Offering STEM-focused courses, workshops, and training programs to cultivate a skilled workforce in robotics and AI and partnering with universities to provide hands-on learning experiences for students.
 \end{itemize}
 
 \subsection{Vision and Mission}
 
-\textbf{Vision:} To become a leading research laboratory in Cambodia in the fields of data science, artificial intelligence, and analytics, contributing to innovation, education, and sustainable national development.
+\textbf{Vision:} To become a leading robotics and AI company in Southeast Asia, driving technological innovation and empowering businesses to embrace automation.
 
-\textbf{Mission:}
-\begin{itemize}
-    \item To conduct research and development in artificial intelligence, data science, and related fields.
-    \item To promote innovation through practical and applied research projects.
-    \item To provide students with opportunities to develop technical, analytical, and research skills.
-    \item To collaborate with academic, industrial, and public institutions in solving real-world problems using data-driven approaches.
-    \item To support the responsible and effective use of AI technologies in Cambodia.
-\end{itemize}
+\textbf{Mission:} To provide cutting-edge robotics and AI solutions that drive efficiency, productivity, and growth for businesses in Cambodia and beyond.
 
 \subsection{Organization Chart}
 
-\hs ReDA Lab operates under the Department of Applied Mathematics and Statistics at the Institute of Technology of Cambodia. The laboratory is organized through a board and research-unit structure to support academic research, student innovation, and interdisciplinary collaboration. As shown in Figure~\ref{fig:reda-organization}, the organizational structure includes leadership roles and specialized research units such as LLM Application and Research, Computer Vision and AI, Data Science and Machine Learning, Data and Business Analytics, and Big Data and Data Engineering. This structure helps the laboratory coordinate research activities and support students in different areas of specialization.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{figures/schools/reda-organization.png}
-    \caption{ReDA Lab Board and Organizational Structure}
-    \label{fig:reda-organization}
-\end{figure}
+\textit{Ot ton mean}
 
 \subsection{Address and Contact}
 
 \begin{itemize}
-    \item \textbf{Organization Name:} Research and Data Analytics (ReDA) Laboratory
-    \item \textbf{Institution:} Institute of Technology of Cambodia (ITC)
-    \item \textbf{Department:} Department of Applied Mathematics and Statistics (AMS)
-    \item \textbf{Office Location:} Room F201
-    \item \textbf{Address:} Russian Federation Boulevard (110), Phnom Penh 120404, Cambodia
-    \item \textbf{Contact Person:} Dr. HAS Sothea
-    \item \textbf{Position:} Head of Research and Data Analytics Laboratory
-    \item \textbf{Facebook:} \href{https://m.facebook.com/people/Research-and-Data-Analytics-Lab/61577145037198/}{Research and Data Analytics Lab}
+    \item \textbf{Organization Name:} AI Farm Robotics Co., Ltd.
+    \item \textbf{Website:} \href{https://aifarm.dev/}{aifarm.dev}
+    \item \textbf{Email:} \href{mailto:info@aifarm.dev}{info@aifarm.dev}
 \end{itemize}
 
 \subsection{Internship Working Schedule}
