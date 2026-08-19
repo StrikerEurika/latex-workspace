@@ -1,0 +1,20 @@
+\clearpage
+\phantomsection
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+
+\hs This thesis presents the design, implementation, and empirical evaluation of \textbf{\textit{kfc\_procedure}}, a Python-based machine learning package for clusterwise supervised learning and COBRA-based ensemble aggregation. The project was developed during an internship at the Research and Data Analytics Laboratory of the Department of Applied Mathematics and Statistics, Institute of Technology of Cambodia. The main objective of the work is to transform theoretical methods related to clusterwise learning, consensus aggregation, and GradientCOBRA into a reusable and modular software framework.
+
+The proposed package contains two connected subsystems. The first subsystem is \textbf{\textit{KFCProcedure}}, which follows a three-step clusterwise learning workflow. The K-step detects latent cluster structures using divergence-based clustering methods. The F-step trains local predictive models inside the generated clusters. The C-step combines the predictions from different divergence-based configurations using configurable aggregation strategies. The second subsystem is \textbf{\textit{GradientCOBRA}}, which provides COBRA-based aggregation mechanisms, including \textbf{\textit{GradientCOBRA}} for regression, \textbf{\textit{MixCOBRARegressor}} for mixed input-space and prediction-space aggregation, and \textbf{\textit{CombinedClassifier}} for classification aggregation.
+
+The implementation follows a modular software architecture with separate components for data splitting, base estimators, normalization, distance computation, kernel weighting, optimization, loss functions, clustering, local learning, and prediction aggregation. The framework is designed to be extensible and compatible with common machine learning workflows in Python.
+
+The empirical evaluation was conducted on seven supervised learning datasets covering both classification and regression tasks. The classification experiments used Heart Disease, Diabetes, Loan Prediction, and Cyber Security Attacks datasets. The regression experiments used Abalone, California Housing, and Wind Turbine datasets. The models were evaluated using repeated train--test splits across five random seeds. Classification performance was measured using Accuracy, Precision, Recall, and F1-score, while regression performance was measured using Mean Absolute Percentage Error, Root Mean Squared Error, and coefficient of determination.
+
+
+
+The experimental results show that the implemented framework is functional across different datasets and prediction tasks. The \textbf{\textit{KFCClassifier}} obtained the nominally highest mean performance on the Heart Disease dataset, although this result should be interpreted cautiously because the test set is small and the standard deviations overlap with strong baselines. For regression, \textbf{\textit{KFCRegressor}} with a \textbf{\textit{GradientCOBRA}} combiner was successfully executed on all regression datasets. It matched or nominally led the baselines only on Abalone in terms of RMSE and $R^2$, while on the other regression datasets it did not outperform the strongest baseline or standalone COBRA-based models under the tested configurations. These results show that the main contribution of the thesis is not a claim of universal predictive superiority, but the development of a reusable, extensible, and experimentally validated Python framework for clusterwise learning and COBRA-based aggregation.
+
+\vspace{0.5cm}
+\noindent\textbf{Keywords:} Clusterwise learning, supervised learning, ensemble aggregation, COBRA, GradientCOBRA, machine learning framework, Python package.
