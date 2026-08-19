@@ -2,7 +2,7 @@
   // =========================================================
   // BUILD
   // =========================================================
-  "latex-workshop.latex.autoBuild.run": "onFileChange",
+  "latex-workshop.latex.autoBuild.run": "onSave",
   // Keep each source project in its own viewer-tracked output directory.
   "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/ngt",
   // Rebuild also when .sty, .cls, .bib files are saved
@@ -12,7 +12,7 @@
   // =========================================================
   // RECIPES
   // =========================================================
-  "latex-workshop.latex.recipe.default": "general: xelatex + biber",
+  "latex-workshop.latex.recipe.default": "general: xelatex fast",
   "latex-workshop.latex.recipes": [
     {
       "name": "general: xelatex + biber",

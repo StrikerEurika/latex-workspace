@@ -67,6 +67,10 @@ build_pdf() {
     -output-directory="$OUTDIR" \
     "$DOC" || exit 1
 
+  if [[ "$MODE" == "fast" ]]; then
+    return
+  fi
+
   "$BIBER" \
     --input-directory="$OUTDIR" \
     --output-directory="$OUTDIR" \
