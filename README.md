@@ -350,7 +350,9 @@ Recommended `.vscode/settings.json`:
 
 ```json
 {
-  "latex-workshop.latex.autoBuild.run": "never",
+  "latex-workshop.latex.autoBuild.run": "onFileChange",
+
+  "latex-workshop.latex.autoBuild.interval": 1000,
 
   "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build",
 
@@ -462,6 +464,29 @@ From the workspace root:
 ```bash
 cd project-root
 ```
+
+### Essential Commands for `ngt`
+
+Run these commands from the workspace root (`/workspace`):
+
+```bash
+# Make the build script executable (first time only)
+chmod +x scripts/build-latex.sh
+
+# Fast build for normal text and layout changes
+./scripts/build-latex.sh "$PWD/src/ngt/main.tex" "$PWD" "$PWD/build/ngt" fast
+
+# Full build with bibliography and cross-references
+./scripts/build-latex.sh "$PWD/src/ngt/main.tex" "$PWD" "$PWD/build/ngt" full
+
+# Clean rebuild after a terminated or broken build
+./scripts/build-latex.sh "$PWD/src/ngt/main.tex" "$PWD" "$PWD/build/ngt" full clean
+
+# Open the generated PDF
+xdg-open build/ngt/main.pdf
+```
+
+The generated document is located at `build/ngt/main.pdf`.
 
 Build a thesis project:
 

@@ -1,0 +1,54 @@
+\documentclass[12pt,a4paper]{report}
+
+% load style from thesisstyle
+\usepackage{thesisstyle}
+
+% load references
+\addbibresource{references.bib}
+
+% load metadata from settings
+\input{settings/metadata}
+
+\begin{document}
+\input{frontmatter/01_cover}
+\input{frontmatter/02a_sub_cover_kh}
+\input{frontmatter/02b_sub_cover_fr}
+\input{frontmatter/02c_sub_cover_en}
+
+\clearpage
+\pagenumbering{Roman}
+\input{frontmatter/03_acknowledgement}
+\input{frontmatter/04a_abstract_kh}
+\input{frontmatter/04b_abstract_en}
+
+\clearpage
+\tableofcontents
+\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
+
+\clearpage
+\listoffigures
+\addcontentsline{toc}{chapter}{LIST OF FIGURES}
+
+\clearpage
+\listoftables
+\addcontentsline{toc}{chapter}{LIST OF TABLES}
+
+\clearpage
+\input{frontmatter/05_abreviation}
+
+
+\pagenumbering{arabic}
+% \input{chapters/ch0_thesis_placeholder}
+\input{chapters/ch1_introduction}
+
+\clearpage
+\phantomsection
+\printbibliography[heading=bibintoc]
+
+\clearpage
+\appendix
+\chapter*{APPENDICES}
+\addcontentsline{toc}{chapter}{APPENDICES}
+\textit{Add appendix material here when needed.}
+
+\end{document}

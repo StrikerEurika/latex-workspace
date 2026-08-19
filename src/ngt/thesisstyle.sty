@@ -1,0 +1,437 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thesisstyle}[2026/06/10 Custom thesis style]
+
+% =====================================================
+% 1. FONT AND LANGUAGE SETUP
+% =====================================================
+
+\RequirePackage{fontspec}
+\RequirePackage{polyglossia}
+
+\setmainlanguage{english}
+\setotherlanguage{khmer}
+
+% Main English fonts
+\setmainfont{Times New Roman}
+\setmonofont{DejaVu Sans Mono}
+
+% Khmer fonts
+\newfontfamily\khmerfont{Khmer OS Battambang}
+\newfontfamily\khmoul[                
+    BoldFont = Khmer OS Muol Light
+]{Khmer OS Muol Light}
+\newfontfamily\khsr{Khmer OS Siemreap}
+
+% Khmer text line breaking
+\XeTeXlinebreaklocale "khm"
+\XeTeXlinebreakskip = 0pt plus 0.5pt minus 0.25pt
+
+% Khmer field row for cover page
+\newcommand{\KHCoverRow}[2]{%
+    {\khmoul\fontsize{13pt}{15pt}\selectfont #1} &
+    {\khmoul\fontsize{13pt}{15pt}\selectfont : #2} \\[.45cm]
+}
+
+% =====================================================
+% 2. PAGE LAYOUT
+% =====================================================
+
+\RequirePackage[                
+    a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    right=2cm
+]{geometry}
+
+% =====================================================
+% 3. PARAGRAPH AND LINE SPACING
+% =====================================================
+
+\RequirePackage{setspace}
+\RequirePackage{indentfirst}
+
+\onehalfspacing
+\setlength{\parindent}{0in} % first-line indent, about 0 inch
+\setlength{\parskip}{8pt}   % no extra space between paragraphsa
+
+% =====================================================
+% 4. CORE PACKAGES
+% =====================================================
+
+% Graphics, colors, frames, and floats
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{eso-pic}
+\RequirePackage{mdframed}
+\RequirePackage{float}
+\RequirePackage{caption}
+
+% Tables
+\RequirePackage{booktabs}
+\RequirePackage{longtable}
+\RequirePackage{tabularx}
+\RequirePackage{array}
+
+% Mathematics and algorithms
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{algorithm}
+\RequirePackage{algpseudocode}
+
+% Verbatim/code display
+\RequirePackage{fancyvrb}
+
+% Utility packages
+\RequirePackage{etoolbox}
+\RequirePackage{microtype}
+\RequirePackage{xurl}
+\RequirePackage{seqsplit}
+\RequirePackage{enumitem}
+
+% TikZ diagrams
+\RequirePackage{tikz}
+\usetikzlibrary{                
+    positioning,
+    arrows.meta,
+    shapes.geometric,
+    shapes.misc,
+    calc,
+    fit
+}
+
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% =====================================================
+% 5. TEXT WRAPPING, CODE NAMES, AND LIST FORMATTING
+% =====================================================
+
+% Helps LaTeX reduce overfull lines globally
+\setlength{\emergencystretch}{3em}
+
+% Better URL breaking
+\Urlmuskip=0mu plus 1mu
+
+% Safe commands for code, package, class, function, and file names
+\providecommand{\code}[1]{\texttt{\seqsplit{#1}}}
+\providecommand{\pkg}[1]{\texttt{\seqsplit{#1}}}
+\providecommand{\filepath}[1]{\texttt{\seqsplit{#1}}}
+
+% Safer enumerate formatting
+\setlist[enumerate]{                
+    leftmargin=1.25cm,
+    itemsep=0.35em,
+    topsep=0.5em
+}
+
+% Safer itemize formatting
+\setlist[itemize]{                
+    leftmargin=1.25cm,
+    itemsep=0.35em,
+    topsep=0.5em
+}
+
+% =====================================================
+% 6. TABLE OF CONTENTS, LIST OF FIGURES, AND LIST OF TABLES
+% =====================================================
+
+\RequirePackage{tocloft}
+
+% Rename TOC, LOF, and LOT titles
+\gappto\captionsenglish{%
+    \renewcommand{\contentsname}{TABLE OF CONTENTS}%
+    \renewcommand{\listfigurename}{LIST OF FIGURES}%
+    \renewcommand{\listtablename}{LIST OF TABLES}%
+}
+
+% TOC depth
+% 2 = show chapters, sections, and subsections
+% 3 = number subsubsections in the document
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
+% Dotted leader style
+\renewcommand{\cftdotsep}{1}
+
+% -----------------------------------------------------
+% TOC chapter format
+% Example:
+% CHAPTER 1 : INTRODUCTION ................. 1
+% -----------------------------------------------------
+\renewcommand{\cftchappresnum}{CHAPTER~}
+\renewcommand{\cftchapaftersnum}{~:~}
+
+\setlength{\cftchapindent}{0em}
+\setlength{\cftchapnumwidth}{7.5em}
+
+% Keep chapter entries bold in TOC
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftchappagefont}{\bfseries}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% -----------------------------------------------------
+% TOC section and subsection format
+% -----------------------------------------------------
+\setlength{\cftsecindent}{1.5em}
+\setlength{\cftsecnumwidth}{3em}
+
+\setlength{\cftsubsecindent}{3.5em}
+\setlength{\cftsubsecnumwidth}{4em}
+
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftsubsecpagefont}{\normalfont}
+
+% -----------------------------------------------------
+% TOC, LOF, and LOT vertical spacing
+% -----------------------------------------------------
+\setlength{\cftparskip}{0pt}
+
+\setlength{\cftbeforechapskip}{3pt}
+\setlength{\cftbeforesecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{3pt}
+
+\setlength{\cftbeforefigskip}{3pt}
+\setlength{\cftbeforetabskip}{3pt}
+
+% Page number spacing in TOC / LOF / LOT
+\cftsetpnumwidth{1.8em}
+\cftsetrmarg{2.2em}
+
+% -----------------------------------------------------
+% Center TOC, LOF, and LOT titles
+% -----------------------------------------------------
+\renewcommand{\cfttoctitlefont}{\hspace*{\fill}\Large\bfseries}
+\renewcommand{\cftaftertoctitle}{\hspace*{\fill}}
+
+\renewcommand{\cftloftitlefont}{\hspace*{\fill}\Large\bfseries}
+\renewcommand{\cftafterloftitle}{\hspace*{\fill}}
+
+\renewcommand{\cftlottitlefont}{\hspace*{\fill}\Large\bfseries}
+\renewcommand{\cftafterlottitle}{\hspace*{\fill}}
+
+% Move titles upward
+\setlength{\cftbeforetoctitleskip}{-1cm}
+\setlength{\cftbeforeloftitleskip}{-1cm}
+\setlength{\cftbeforelottitleskip}{-1cm}
+
+% -----------------------------------------------------
+% Remove automatic extra chapter gap in LOF and LOT
+% -----------------------------------------------------
+\makeatletter
+\patchcmd{\@chapter}
+{\addtocontents{lof}{\protect\addvspace{10\p@}}}
+{}
+{}{}
+
+\patchcmd{\@chapter}
+{\addtocontents{lot}{\protect\addvspace{10\p@}}}
+{}
+{}{}
+\makeatother
+
+% =====================================================
+% 7. FIGURE AND TABLE NUMBERING, CAPTIONS, AND LIST FORMAT
+% =====================================================
+
+% Number figures and tables by chapter
+% Example:
+% Figure 1.1, Figure 1.2, Table 1.1, Table 1.2
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+
+% Reset figure and table numbers at every chapter
+\makeatletter
+\@addtoreset{figure}{chapter}
+\@addtoreset{table}{chapter}
+\makeatother
+
+% Caption label spacing
+% Example:
+% Figure 1.1:   System Architecture
+\DeclareCaptionLabelSeparator{colonspace}{:\quad}
+
+% Caption format in document
+\captionsetup[figure]{                
+    name=Figure,
+    labelfont=bf,
+    labelsep=colonspace,
+    skip=8pt
+}
+
+\captionsetup[table]{                
+    name=Table,
+    labelfont=bf,
+    labelsep=colonspace,
+    skip=8pt
+}
+
+% Space around floats in the main text
+\setlength{\textfloatsep}{14pt plus 2pt minus 2pt}
+\setlength{\floatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{12pt plus 2pt minus 2pt}
+
+% -----------------------------------------------------
+% List of Figures format
+% Example:
+% Figure 6.10: Training workflow ............. 82
+% -----------------------------------------------------
+\renewcommand{\cftfigpresnum}{Figure~}
+\renewcommand{\cftfigaftersnum}{:\quad}
+\setlength{\cftfigindent}{0em}
+\setlength{\cftfignumwidth}{6.8em}
+
+% -----------------------------------------------------
+% List of Tables format
+% Example:
+% Table 6.10: Testing summary ................ 90
+% -----------------------------------------------------
+\renewcommand{\cfttabpresnum}{Table~}
+\renewcommand{\cfttabaftersnum}{:\quad}
+\setlength{\cfttabindent}{0em}
+\setlength{\cfttabnumwidth}{6.8em}
+
+% =====================================================
+% 8. CHAPTER AND SECTION TITLE FORMATTING
+% =====================================================
+
+\RequirePackage{titlesec}
+
+% -----------------------------------------------------
+% Chapter title format
+% Example:
+% CHAPTER 1 : INTRODUCTION
+% -----------------------------------------------------
+\titleformat{\chapter}
+{\bfseries\fontsize{14pt}{21pt}\selectfont}
+{CHAPTER \thechapter\ :}
+{12pt}
+{\MakeUppercase}
+
+% -----------------------------------------------------
+% Numberless chapter title format
+% Example:
+% ABSTRACT, ACKNOWLEDGEMENT
+% -----------------------------------------------------
+\titleformat{name=\chapter,numberless}
+{\centering\bfseries\fontsize{14pt}{21pt}\selectfont}
+{}
+{0pt}
+{\MakeUppercase}
+
+% Chapter spacing
+\titlespacing{\chapter}
+{0in}      % left indent
+{-1cm}      % space before
+{12pt}     % space after
+
+% -----------------------------------------------------
+% Section title format
+% Example:
+% 1.1. Presentation of Internship
+% -----------------------------------------------------
+\titleformat{\section}
+{\bfseries\fontsize{12pt}{18pt}\selectfont}
+{\thesection.}
+{0.6cm}
+{}
+
+\titlespacing{\section}
+{0in}    % left indent
+{18pt}     % space before
+{12pt}     % space after
+
+% -----------------------------------------------------
+% Subsection title format
+% Example:
+% 1.1.1. Objectives
+% -----------------------------------------------------
+\titleformat{\subsection}
+{\bfseries\fontsize{11pt}{16.5pt}\selectfont}
+{\thesubsection.}
+{0.4cm}
+{}
+
+\titlespacing{\subsection}
+{0in}    % left indent
+{14pt}     % space before
+{10pt}     % space after
+
+
+% -----------------------------------------------------
+% Subsubsection title format
+% Example:
+% 1.1.1.1. Detailed Explanation
+% -----------------------------------------------------
+\titleformat{\subsubsection}
+{\bfseries\fontsize{11pt}{16.5pt}\selectfont}
+{\thesubsubsection.}
+{0.5cm}
+{}
+
+\titlespacing{\subsubsection}
+{0in} % left indent
+{8pt} % space before
+{4pt} % space after
+
+% =====================================================
+% 9. CITATIONS, REFERENCES, AND HYPERLINKS
+% =====================================================
+
+\RequirePackage[                
+    backend=biber,
+    style=ieee,
+    sorting=none
+]{biblatex}
+
+\DefineBibliographyStrings{english}{%
+    bibliography = {REFERENCES},
+    references = {REFERENCES}
+}
+
+\RequirePackage{hyperref}
+\RequirePackage{bookmark}
+
+\hypersetup{                
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=black
+}
+
+% =====================================================
+% 10. CUSTOM COMMANDS
+% =====================================================
+
+% Centered low-opacity watermark using TikZ
+\newcommand{\Watermark}{%
+    \AddToShipoutPictureBG*{%
+        \begin{tikzpicture}[remember picture, overlay]
+            \node[            
+                opacity=0.18,
+                anchor=center
+            ] at ([xshift=0cm,yshift=-1.5cm]current page.center) {%
+                \includegraphics[            
+                    width=0.75\paperwidth,
+                    keepaspectratio
+                ]{figures/schools/watermark.png}%
+            };
+        \end{tikzpicture}%
+    }%
+}
+
+% Horizontal spacing helper
+\providecommand{\hs}{\hspace*{1.25cm}}
+
+% Reference commands
+\providecommand{\figref}[1]{Figure~\ref{#1}}
+\providecommand{\tabref}[1]{Table~\ref{#1}}
+\providecommand{\chapref}[1]{Chapter~\ref{#1}}
+\providecommand{\secref}[1]{Section~\ref{#1}}
+
+% Variable and project-name commands
+\providecommand{\varname}[1]{\textbf{\detokenize{#1}}}
+\providecommand{\KFCProcedure}{\textbf{\textit{KFCProcedure}}}
+\providecommand{\GradientCOBRA}{\textbf{\textit{GradientCOBRA}}}
+\providecommand{\UrlFont}{\ttfamily\small}

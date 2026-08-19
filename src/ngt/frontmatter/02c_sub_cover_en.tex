@@ -1,0 +1,138 @@
+\begin{titlepage}    
+    \thispagestyle{empty}
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{0pt}
+    
+    \Watermark
+    
+    % =========================
+    % Header
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}[c][2.8cm][c]{0.18\linewidth}
+            \centering
+            \includegraphics[height=2.45cm, keepaspectratio]{figures/schools/moey.png}
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[c][2.8cm][c]{0.58\linewidth}
+            \centering
+            {\bfseries\fontsize{14pt}{18pt}\selectfont\ENMinistry\par}
+        \end{minipage}%
+        \hfill
+        \begin{minipage}[c][2.8cm][c]{0.18\linewidth}
+            \centering
+            \includegraphics[height=2.45cm, keepaspectratio]{figures/schools/itc.png}
+        \end{minipage}%
+    }
+    
+    \vspace{0.6cm}
+    
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \centering
+            {\bfseries\fontsize{14pt}{18pt}\selectfont\ENInstitute\par}
+        \end{minipage}%
+    }
+    
+    \vspace{0.6cm}
+    
+    % =========================
+    % Department
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\linewidth}
+            \centering
+            {\bfseries\fontsize{14pt}{18pt}\selectfont\ENDepartment\par}
+        \end{minipage}%
+    }
+    
+    \vspace{2.5cm}
+    
+    % =========================
+    % English Approval Block
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{0.72\textwidth}
+            \centering
+            
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENDegreeProject\par
+                \vspace{0.25cm}
+                BY \ENStudentName\par
+            }
+            
+            \vspace{0.45cm}
+            
+            
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENDefenseDateLabel: 08 July 2026\par
+            }
+            
+            \vspace{0.35cm}
+            
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENApprovalLabel\par
+            }
+            
+            \vspace{0.65cm}
+            
+            {\bfseries\fontsize{16pt}{22pt}\selectfont
+                \ENDirectorLabel: \underline{\hspace{4.2cm}}\par
+            }
+            
+            \vspace{0.55cm}
+            
+            {\bfseries\fontsize{12pt}{16pt}\selectfont
+                \ENAcademicCity, \underline{\hspace{4.2cm}}\par
+            }
+        \end{minipage}%
+    }
+    
+    \vspace{1.5cm}
+    
+    % =========================
+    % Block 1: Topic and Enterprise
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \vspace{0.12cm}
+            \hspace{0.25cm}%
+            {\bfseries\fontsize{12pt}{16pt}\selectfont
+                \renewcommand{\arraystretch}{1.20}
+                \begin{tabularx}{\dimexpr\linewidth-0.7cm\relax}
+                    {@{}l@{\hspace{0.15cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                    \ENTopicLabel & \ENThesisTitle \\
+                \end{tabularx}
+            }
+        \end{minipage}%
+    }
+    
+    % =========================
+    % Block 2: Supervisors
+    % =========================
+    \noindent\makebox[\linewidth][c]{%
+        \begin{minipage}{\dimexpr\linewidth-0.2cm\relax}
+            \vspace{0.12cm}
+            \hspace{0.25cm}%
+            {\bfseries\fontsize{12pt}{16pt}\selectfont
+                \renewcommand{\arraystretch}{1.20}
+                \begin{tabularx}{\dimexpr\linewidth-0.3cm\relax}
+                    {@{}l@{\hspace{0.15cm}:\hspace{0.25cm}}>{\raggedright\arraybackslash}X@{}}
+                    \ENEnterpriseLabel           & \ENEnterprise               \\
+                    \ENDepartmentHeadLabel       & \ENDepartmentHeadName\underline{\hspace{3.4cm}}       \\
+                    \ENAcademicSupervisorLabel   & \ENAcademicSupervisorName\underline{\hspace{4.4cm}}   \\
+                    \ENEnterpriseSupervisorLabel & \ENEnterpriseSupervisorName\underline{\hspace{3.4cm}} \\
+                \end{tabularx}
+            }
+            \vspace{0.12cm}
+        \end{minipage}%
+    }
+    
+    \vfill
+    
+    \begin{center}
+        {\bfseries\fontsize{12pt}{16pt}\selectfont
+            \ENAcademicCity\par}
+    \end{center}
+    
+\end{titlepage}
