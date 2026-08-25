@@ -2,7 +2,7 @@
   // =========================================================
   // BUILD
   // =========================================================
-  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.autoBuild.run": "never",
   // Keep each source project in its own viewer-tracked output directory.
   "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/ngt",
   // Rebuild also when .sty, .cls, .bib files are saved
@@ -12,7 +12,6 @@
   // =========================================================
   // RECIPES
   // =========================================================
-  "latex-workshop.latex.recipe.default": "general: xelatex fast",
   "latex-workshop.latex.recipes": [
     {
       "name": "general: xelatex + biber",
@@ -27,7 +26,9 @@
       ]
     }
   ],
+  "latex-workshop.latex.recipe.default": "general: xelatex + biber",
   // =========================================================
+  
   // TOOLS
   // =========================================================
   "latex-workshop.latex.tools": [
@@ -57,6 +58,23 @@
     }
   ],
   // =========================================================
+  // Exclude files from 
+  // =========================================================
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+  "search.exclude": {
+    "**/build/**": true,
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true
+  },
+  // =========================================================
   // VIEWER & SYNCTEX
   // =========================================================
   "latex-workshop.view.pdf.viewer": "tab",
@@ -73,7 +91,7 @@
   // EDITOR QUALITY OF LIFE
   // =========================================================
   "latex-workshop.intellisense.package.enabled": true,
-  "latex-workshop.latex.autoBuild.interval": 1000,
+  "latex-workshop.latex.autoBuild.interval": 3000,
   "[latex]": {
     "editor.formatOnSave": false,
     "editor.wordWrap": "on",

@@ -1,0 +1,106 @@
+\chapter{LITERATURE REVIEW}
+
+\section{Introduction}
+
+\hs The automatic identification and segmentation of concrete and road pavement cracks are vital components of structural health monitoring (SHM) and transportation infrastructure maintenance. For decades, the civil engineering and computer vision communities have attempted to replace manual, subjective visual inspections with automated, objective, and reproducible frameworks. This chapter provides a comprehensive review of the historical developments, foundational deep learning paradigms, and specialized strategies that form the background of this thesis. First, traditional digital image processing methods are introduced alongside their inherent sensitivity to external noise. Second, the evolution of deep learning architectures for image segmentation, categorized into semantic, instance, and transformer-based paradigms, is analyzed. Third, real-world applications of artificial intelligence in crack detection across ground-level and aerial platforms are discussed, identifying the major research gaps. Finally, strategies for processing large-scale, high-resolution imagery exceeding hardware memory limits are reviewed.
+
+\section{Traditional Crack Detection Methods}
+
+\hs Prior to the widespread adoption of deep learning, automated crack detection relied heavily on classical digital image processing (DIP) and machine vision techniques \cite{zhang-2024a}. Because crack structures in concrete and pavements typically manifest as sharp changes in brightness, lower-grayscale regions, or narrow linear features relative to the surrounding texture \cite{zhen-liang-2025,liu-2019}, early research focused on locating these defects by searching for color, gradient, and geometric anomalies \cite{zhen-liang-2025}.
+
+Classical traditional detection methods can be broadly categorized based on their mathematical operations:
+\begin{enumerate}
+    \item \textbf{First-Derivative-Based Edge Detection}: These operators approximate the gradient of the image to identify sharp intensity transitions corresponding to crack boundaries. Widely used filters include the Sobel, Prewitt, Roberts, and Canny edge detection operators. The Sobel operator, for example, performs spatial gradient calculations to capture abrupt grayscale changes at crack edges. However, these methods are highly sensitive to isolated noise, speckles, and non-crack surface textures, leading to high false-positive rates on complex concrete surfaces \cite{zhen-liang-2025}.
+    \item \textbf{Second-Derivative-Based Edge Detection}: These methods focus on identifying zero-crossing points of the second-order derivative to delineate edges. Representative techniques include the Laplacian of Gaussian (LoG) operator and zero-crossing detection. While second-derivative approaches exhibit a heightened sensitivity to subtle curvature changes along edges, they are exceptionally vulnerable to high-frequency noise and surface roughness, requiring heavy pre-filtering to avoid spurious detections \cite{zhen-liang-2025}.
+    \item \textbf{Matched Filtering Algorithms}: To improve noise immunity compared to standard gradient filters, researchers designed matched filters that approximate the expected profile of a crack. Since a crack's local trajectory can be represented as a small rectangular or linear segment, matched filters establish multidirectional kernels (e.g., using Gaussian functions) that are rotated at various angles to maximize the correlation response. Although matched filtering provides stronger anti-interference capabilities than simple derivative operators, it is computationally expensive due to the need for omnidirectional convolutions \cite{zhen-liang-2025}.
+    \item \textbf{Threshold Segmentation and Morphological Operations}: Other traditional approaches rely on the intensity difference between the darker crack pixels and the lighter background. Thresholding algorithms, such as the Iterative Clipping Method (ICM) or the Neighboring Difference Histogram Method (NDHM), segment the image based on global or local optimized grayscale thresholds \cite{liu-2019}. Morphological operations, including dilation, erosion, thinning, and Black Top-Hat (BTH) transformations, are subsequently applied to remove small non-crack regions, extract skeletons, and bridge minor gaps in the detected crack paths \cite{zhang-2024a}.
+    \item \textbf{Wavelet Transforms}: Wavelet-based methods decompose the image into multiple frequency scales to isolate and enhance the high-frequency linear characteristics of cracks while suppressing low-frequency background variations \cite{zhang-2024a,liu-2019}.
+\end{enumerate}
+
+Despite their historical significance, low computational cost, and high interpretability, traditional DIP methods suffer from several critical limitations:
+\begin{itemize}
+    \item \textbf{Extreme Sensitivity to Noise and Illumination}: Traditional methods assume a clear, homogeneous contrast between cracks and non-crack regions. In practical road and building inspections, surfaces are plagued by non-uniform lighting, shadows (from trees, vehicles, or formwork), stains, dust, plant twigs, water marks, and intrinsic material textures \cite{liu-2019,kirchhoff-2024,sohaib-2024,zhang-2024c}. These interferences frequently obscure crack features, leading to severe segmentation discontinuity or false detections.
+    \item \textbf{Weak Generalization and Robustness}: DIP algorithms rely on handcrafted features and manual parameter configurations (e.g., gradient thresholds, kernel sizes, and scale factor adjustments) \cite{zhang-2024a}. Because these parameters are tailored to a specific dataset or camera setup, the algorithms exhibit a complete lack of generalizability; a method that performs well on clean, smooth concrete will fail entirely when deployed in rough, dirty, or wet environments \cite{liu-2019}.
+    \item \textbf{Inability to Represent Complex Topologies}: Traditional pixel-level thresholding and parallel thinning methods struggle to preserve the connectivity of narrow, branching, or discontinuous cracks, often resulting in fragmented centerlines and substantial measurement errors \cite{liu-2019,zhang-2025,zhang-2024b}.
+\end{itemize}
+
+\section{Deep Learning for Image Segmentation}
+
+\hs To overcome the fragility of handcrafted features, researchers have transitioned to deep-learning algorithms that autonomously learn hierarchical representations from raw image data \cite{zhang-2024a}. This section reviews the development of deep neural networks for pixel-level and instance-level crack segmentation.
+
+\subsection{Semantic Segmentation}
+
+Semantic segmentation treats crack extraction as a dense, pixel-level binary classification task, assigning a label of ``1'' to crack pixels and ``0'' to the background. This approach permits precise, pixel-wise delineation of irregular and tortuous crack shapes \cite{liu-2019}. The most foundational architectures deployed for this task include:
+\begin{itemize}
+    \item \textbf{Fully Convolutional Networks (FCNs)}: FCNs discard fully connected layers in favor of convolutional and upsampling (deconvolutional) layers, allowing pixel-to-pixel training and inference for arbitrary image sizes. FCNs demonstrate that different stages of convolutional layers capture distinct levels of information; lower layers preserve spatial details, while deeper layers obtain abstract semantic context \cite{liu-2019}.
+    \item \textbf{U-Net}: Developed initially for medical image segmentation, U-Net utilizes a symmetric encoder-decoder structure with skip connections. The contracting path (encoder) captures multi-scale context, while the symmetric expanding path (decoder) resolves fine spatial details by directly concatenating low-level feature maps onto upsampled representations \cite{liu-2019, kirchhoff-2024}. Advanced variants, such as U-Net++, introduce nested and dense skip pathways to reduce the semantic gap between the encoder and decoder before feature fusion \cite{pereira-2025}.
+    \item \textbf{DeepLabV3+}: This architecture introduces Atrous Spatial Pyramid Pooling (ASPP) to expand the network's receptive field without losing spatial resolution \cite{goo-2025}. By utilizing atrous (dilated) convolutions with varying dilation rates, DeepLabV3+ effectively captures multi-scale context, which is critical for delineating both thin and wide cracks across diverse surfaces \cite{goo-2025,zhang-2024b}.
+\end{itemize}
+
+\hs Despite achieving high pixel-wise accuracy on standard benchmarks, semantic segmentation models face a fundamental bottleneck in crack detection: \textit{resolution reduction during downsampling}. As the input image passes through successive convolutional and pooling layers in the encoder, its spatial resolution is significantly reduced \cite{sohaib-2024}. For cracks that are only 1 to 3 pixels wide, this downsampling often erases their fine spatial signatures, leading to discontinuous, fragmented, or broken segmentation masks during upsampling \cite{zhang-2024b,zhang-2024c}.
+
+
+\subsection{Instance Segmentation}
+
+\hs While semantic segmentation maps all crack pixels to a single class, instance segmentation jointly detects, localizes, and segments individual crack networks. Differentiating between individual instances is critical for advanced building inspections, where engineers require instance-wise statistics (e.g., tracking the length, orientation, and expansion of specific fissures over time) rather than an aggregated pixel area \cite{zhao-2026}. The primary paradigms include:
+\begin{itemize}
+    \item \textbf{Mask R-CNN}: A representative of the two-stage ``detect-then-segment'' paradigm, Mask R-CNN extends Faster R-CNN by adding a parallel FCN branch to predict a pixel-level mask within each detected bounding box \cite{wang-2019,zhao-2026}. Although highly accurate, the sequential region proposal and RoI aligning steps make Mask R-CNN computationally intensive, limiting its suitability for real-time edge or drone deployment.
+    \item \textbf{SOLO (Segmenting Objects by Locations)}: SOLO rethinks instance segmentation from a single-shot classification perspective. By dividing the image into an $S \times S$ grid, SOLO assigns ``location categories'' to pixels based on the center coordinates and scale of the target instance. This box-free approach bypasses the complex proposal-and-crop pipeline, benefiting from the inherent efficiency of FCNs \cite{wang-2019}.
+    \item \textbf{Single-Stage Real-Time YOLO Series}: To meet the low-latency demands of unmanned systems, real-time single-stage models like YOLOv5-seg, YOLOv8-seg, YOLOv9, YOLOv11, YOLOv12, and their customized variants (e.g., USSC-YOLO, ISDC-YOLO, SS-YOLO, S2TNet) have been extensively adopted \cite{zhang-2024a,chen-2026,kucukayan-2024,wang-2025,sohaib-2024}. These architectures integrate lightweight backbones (e.g., ShuffleNet V2, MobileNet, or Inverted Bottlenecks) with coordinate attention mechanisms to achieve rapid bounding-box regression and mask generation under limited hardware constraints \cite{zhang-2024a,sohaib-2024,wang-2025}.
+\end{itemize}
+
+\subsection{Transformer-Based Segmentation}
+
+\hs Originally designed for natural language processing, the Transformer architecture has emerged as a state-of-the-art paradigm in computer vision. While traditional convolutional layers process features locally using fixed receptive fields, transformers employ self-attention mechanisms to model long-range spatial dependencies across the entire image canvas \cite{sohaib-2024,zhang-2024c,zhang-2024a}.
+\begin{itemize}
+    \item \textbf{SegFormer}: This model combines a hierarchical Mix Transformer (MiT) encoder with a lightweight MLP decoder. SegFormer dispenses with complex positional encodings by using depthwise convolutions to inject positional information, capturing both high-resolution local details and global contextual features \cite{sohaib-2024}.
+    \item \textbf{Swin Transformer}: To address the quadratic computational complexity of global self-attention, Swin Transformer introduces shifted window-based self-attention. By limiting attention computation to non-overlapping local windows while permitting cross-window connections, it constructs hierarchical representations with linear complexity relative to image size \cite{zhang-2024a,sohaib-2024,zhang-2024a}.
+\end{itemize}
+
+\hs The main advantage of transformer-based models is their global spatial awareness, which prevents the loss of geometric continuity often suffered by local CNN kernels. However, they possess several notable limitations: they lack the inductive biases of translation equivariance and locality inherent to CNNs, require massive annotated datasets to train from scratch without overfitting, and incur extremely high computational and memory overheads, making real-time deployment on edge devices challenging \cite{sohaib-2024,zhang-2024c}.
+
+\section{Applications of AI in Crack Detection}
+
+\hs Automated crack detection has been deployed across various infrastructure assets, which can be distinguished based on their imaging perspectives and operational environments.
+
+\subsection{Ground-Level Inspections}
+
+\hs Ground-level defect inspections are typically conducted on road pavements, airport runways, and tunnel linings. Images are collected using handheld smartphones, mobile laser scanners, or autonomous wheeled robots equipped with close-range RGB-D cameras. Under these conditions, the acquisition distance is highly controlled (usually 1 to 3 meters), resulting in high-resolution, high-contrast imagery where crack features are highly detailed \cite{zhen-liang-2025,kyem-2025,zhao-2026,zhang-2024b, gharehbaghi-2026b}. However, ground vehicles and robots are expensive, slow, and entirely unsuitable for steep, hazardous, or narrow structures.
+
+\subsection{Aerial UAV Inspections}
+
+\hs To inspect large-scale, elevated, or hazardous infrastructures, such as high-rise building facades, concrete gravity dams, and mountainous highway slopes, researchers have increasingly deployed Unmanned Aerial Vehicles (UAVs) or drones. UAVs carry high-resolution sensors to collect multi-angle, wide-area nadir and oblique imagery in GPS-denied or rugged terrains \cite{zhang-2024a, chen-2026,chen-2024,zhao-2026,gharehbaghi-2026a,wang-2025}.
+
+\subsection{Research Gaps in Aerial and Large-Scale Monitoring}
+
+Despite the promising performance of deep learning on close-up datasets, several critical research gaps remain unaddressed in the literature:
+\begin{enumerate}
+    \item \textbf{Inadequate Validation on Gigapixel-Scale Imagery}: Most existing public datasets (e.g., CFD, Crack500, or DeepCrack) comprise relatively low-resolution images that are pre-cropped into small, homogeneous patches (e.g., $416 \times 416$ or $512 \times 512$ pixels) \cite{zhao-2026}. Consequently, models developed on these datasets are rarely evaluated on genuine high-resolution aerial or satellite imagery (often exceeding 100 megapixels) where cracks are captured from far-shot perspectives \cite{akyon-2022,zhang-2024c}.
+    \item \textbf{Severe Class Imbalance and Thin Crack representation}: In high-altitude aerial views, a crack that is 2 mm wide in the real world is resolved as a feature only 1 to 3 pixels wide in the image, covering less than 0.01\% of the entire canvas \cite{akyon-2022}. Standard loss functions, such as Binary Cross-Entropy (BCE) or Sørensen-Dice, prioritize area-based overlap and are heavily biased toward the background. As a result, the networks either ignore these fine, thread-like structures completely or segment them as disjointed, fragmented pixels, losing topological connectivity \cite{pereira-2025,kirchhoff-2024}.
+    \item \textbf{Separation of Spatial Detection and Temporal Dynamics}: Existing UAV-based inspection pipelines typically treat spatial crack detection and temporal change analysis as separate, independent processes. Due to slight variations in flight trajectories, lighting, and camera orientations across repeated inspection sessions, direct pixel-level subtraction fails, resulting in a lack of geometric consistency and preventing automated tracking of crack propagation, branching, or evolution over time \cite{wang-2025}.
+    \item \textbf{Lack of Physical-Level Quantification}: Most visual models stop at generating 2D segmentation masks, failing to translate pixel-level predictions into physical engineering units (such as metric crack width, length, and area) or register them onto as-is 3D digital twins to support standard-aligned severity grading and maintenance prioritization \cite{zhen-liang-2025,zhao-2026}.
+\end{enumerate}
+
+\section{Handling Large-Scale Images}
+
+\hs When deploying deep learning models on large-scale aerial imagery, the massive resolution introduces severe GPU memory and computational challenges. This section reviews the primary strategies developed to address these hardware limits.
+
+\subsection{Downscaling and its Limitations}
+
+\hs The simplest method to process large images within GPU memory constraints is downscaling (reducing the resolution of the full frame to fit standard input sizes, e.g., $640 \times 640$). However, for crack detection, downscaling is entirely impractical. Because a crack is already extremely thin (1 to 3 pixels wide), downscaling destroys the high-frequency spatial details and fine-grained textures, making the defect completely merge into the background concrete texture and rendering it invisible \cite{akyon-2022}.
+
+\subsection{Image Tiling and Sliding Window Extraction}
+
+\hs To preserve the native Ground Sample Distance (GSD) and annotation fidelity, the standard approach decomposes the high-resolution frame into a series of smaller, fixed-size overlapping patches or tiles (e.g., $512 \times 512$ pixels) using a sliding window. In this pipeline, each tile is processed independently by the network, and the local predictions are subsequently projected back onto the full-resolution canvas \cite{akyon-2022}.
+
+\hs To improve the detection of extremely small objects during tiling, frameworks such as Slicing Aided Hyper Inference (SAHI) implement slicing-aided fine-tuning (SF) and slicing-aided hyper inference (SAHI). During fine-tuning, image patches are extracted and resized to a larger dimension (e.g., 800 to 1333 pixels), making the relative size of the target objects larger compared to the original frame. During inference, the image is similarly sliced, each patch is resized, and the predictions are converted back to the original full-resolution coordinates after executing Non-Maximum Suppression (NMS) or other merging schemes \cite{akyon-2022}.
+
+\subsection{Overlap and Patch-Based Aggregation with Blending}
+
+\hs While tiling successfully addresses memory constraints, it introduces severe boundary context problems. When a crack straddles the border of a tile, the model's prediction near the edge is often highly unreliable or completely lost due to the absence of surrounding context. Simply stitching the output tiles together creates harsh seams, visible grid lines, and broken crack continuity at the boundaries \cite{akyon-2022}.
+
+To resolve this issue, pipelines incorporate two synergistic techniques:
+\begin{enumerate}
+    \item \textbf{Overlapping Sliding Windows}: The sliding window is configured with a defined stride that creates overlapping regions between adjacent tiles (typically a 128-pixel or 25\% overlap) \cite{akyon-2022}. This ensures that any crack straddling a boundary is fully captured in the center of at least one neighboring patch, preserving its contextual details.
+    \item \textbf{Blended Overlap Merging}: Rather than using hard clipping or maximum probability selection in the overlapping regions, a smooth blending or fading technique is applied. A spatial weighting mask (such as a linear or cosine fade) assigns the highest weight to predictions near the center of each tile, while the weight gradually decays toward the edges where the adjacent tile's predictions take over. This fading transition eliminates edge artifacts, suppresses border false positives, and ensures that segmented cracks flow naturally and continuously across the stitched boundaries of the full-resolution image \cite{akyon-2022}.
+\end{enumerate}
