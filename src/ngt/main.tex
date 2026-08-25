@@ -3,6 +3,9 @@
 % load style from thesisstyle
 \usepackage{thesisstyle}
 
+% Uncomment one chapter while drafting to skip the others.
+% \includeonly{chapters/ch2_literature_review}
+
 % load references
 \addbibresource{references.bib}
 
@@ -39,8 +42,8 @@
 
 \pagenumbering{arabic}
 % \input{chapters/ch0_thesis_placeholder}
-\input{chapters/ch1_introduction}
-\input{chapters/ch2_literature_review.tex}
+\include{chapters/ch1_introduction}
+\include{chapters/ch2_literature_review}
 
 \clearpage
 \phantomsection
