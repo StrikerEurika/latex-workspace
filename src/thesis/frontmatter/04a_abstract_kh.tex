@@ -5,17 +5,9 @@
 
 \begin{khmer}
 
-\hs និក្ខេបបទនេះបង្ហាញអំពីការរចនា ការអនុវត្ត និងការវាយតម្លៃជាក់ស្តែងនៃ \textbf{\textit{kfc\_procedure}} ដែលជាកញ្ចប់កម្មវិធី Python សម្រាប់ការរៀនម៉ាស៊ីនបែប clusterwise supervised learning និងការប្រមូលផ្តុំលទ្ធផលតាមវិធីសាស្ត្រ COBRA-based ensemble aggregation។ គម្រោងនេះត្រូវបានអភិវឌ្ឍឡើងក្នុងអំឡុងពេលហាត់ការនៅ Research and Data Analytics Laboratory នៃ Department of Applied Mathematics and Statistics នៅ Institute of Technology of Cambodia។ គោលបំណងសំខាន់នៃការងារនេះគឺបម្លែងវិធីសាស្ត្រ ទ្រឹស្តី ដែលទាក់ទងនឹង clusterwise learning, consensus aggregation និង GradientCOBRA ឱ្យក្លាយជាក្របខណ្ឌកម្មវិធីដែលអាចប្រើឡើងវិញបាន និងមានរចនាសម្ព័ន្ធម៉ូឌុល។
-
-កញ្ចប់កម្មវិធីដែលបានស្នើឡើងមានប្រព័ន្ធរងសំខាន់ចំនួនពីរ។ ប្រព័ន្ធរងទីមួយគឺ \textbf{\textit{KFCProcedure}} ដែលអនុវត្តលំហូរការងារ clusterwise learning ជាបីជំហាន។ K-step ត្រូវបានប្រើសម្រាប់រកឃើញរចនាសម្ព័ន្ធ cluster ដែលមាននៅក្នុងទិន្នន័យ ដោយប្រើវិធីសាស្ត្រ divergence-based clustering។ F-step ត្រូវបានប្រើសម្រាប់បណ្តុះបណ្តាលម៉ូដែលព្យាករណ៍មូលដ្ឋាននៅក្នុង cluster នីមួយៗ។ C-step ត្រូវបានប្រើសម្រាប់បញ្ចូលលទ្ធផលព្យាករណ៍ពីការកំណត់រចនាសម្ព័ន្ធ divergence-based ផ្សេងៗ ដោយប្រើវិធីមូលផ្តុំលទ្ធផលដែលអាចកំណត់បាន។ ប្រព័ន្ធរងទីពីរគឺ \textbf{\textit{GradientCOBRA}} ដែលប្រមូលផ្តុំលទ្ធផលតាម COBRA រួមមាន \textbf{\textit{GradientCOBRA}} សម្រាប់ regression, \textbf{\textit{MixCOBRARegressor}} សម្រាប់ការប្រមូលផ្តុំលទ្ធផលដោយប្រើទាំង input-space និង prediction-space និង \textbf{\textit{CombinedClassifier}} សម្រាប់ classification aggregation។
-
-ការអនុវត្តកម្មវិធីត្រូវបានរៀបចំតាមស្ថាបត្យកម្មម៉ូឌុល ដោយបំបែកសមាសធាតុផ្សេងៗដាច់ដោយឡែកពីគ្នា រួមមានការបែងចែកទិន្នន័យ base estimators, normalization, distance computation, kernel weighting, optimization, loss functions, clustering, local learning និង prediction aggregation។ ក្របខណ្ឌនេះត្រូវបានរចនាឡើងឱ្យងាយស្រួលពង្រីក និងអាចប្រើបានជាមួយលំហូរការងារ machine learning ទូទៅនៅក្នុង Python។
-
-ការវាយតម្លៃជាក់ស្តែងត្រូវបានអនុវត្តលើសំណុំទិន្នន័យ supervised learning ចំនួនប្រាំពីរ ដែលរួមមាន classification និង regression tasks។ សម្រាប់ classification experiments មានការប្រើប្រាស់សំណុំទិន្នន័យ Heart Disease, Diabetes, Loan Prediction និង Cyber Security Attacks។ សម្រាប់ regression experiments មានការប្រើប្រាស់សំណុំទិន្នន័យ Abalone, California Housing និង Wind Turbine។ ម៉ូដែលត្រូវបានវាយតម្លៃដោយប្រើ repeated train--test splits លើ random seeds ចំនួនប្រាំ។ សមត្ថភាព classification ត្រូវបានវាស់ដោយ Accuracy, Precision, Recall និង F1-score ខណៈដែលសមត្ថភាព regression ត្រូវបានវាស់ដោយ Mean Absolute Percentage Error, Root Mean Squared Error និង coefficient of determination។
-
-លទ្ធផលនៃការពិសោធន៍បង្ហាញថាក្របខណ្ឌដែលបានអនុវត្តអាចដំណើរការបានលើសំណុំទិន្នន័យ និងប្រភេទ prediction tasks ផ្សេងៗ។ \textbf{\textit{KFCClassifier}} ទទួលបានលទ្ធផលមធ្យមខ្ពស់បំផុតនៅលើសំណុំទិន្នន័យ Heart Disease និងនៅតែមានសមត្ថភាពប្រកួតប្រជែងលើសំណុំទិន្នន័យ classification មួយចំនួនផ្សេងទៀត។ ទោះជាយ៉ាងណា វាមិនបានលើសម៉ូដែល baseline ដែលខ្លាំងបំផុតជាប្រចាំនោះទេ។ សម្រាប់ regression, \textbf{\textit{KFCRegressor}} ជាមួយ \textbf{\textit{GradientCOBRA}} combiner អាចដំណើរការបានដោយជោគជ័យលើសំណុំទិន្នន័យ regression ទាំងអស់ ប៉ុន្តែជាទូទៅវាមិនបានលើសម៉ូដែល baseline ឬ standalone COBRA-based regression models ដែលខ្លាំងបំផុតក្រោមការកំណត់ពិសោធន៍ដែលបានសាកល្បងនោះទេ។ លទ្ធផលទាំងនេះបង្ហាញថាការរួមចំណែកសំខាន់នៃនិក្ខេបបទនេះមិនមែនជាការអះអាងថាវិធីសាស្ត្រនេះមានសមត្ថភាពព្យាករណ៍ល្អជាងគ្រប់ករណីនោះទេ ប៉ុន្តែជាការអភិវឌ្ឍក្របខណ្ឌ Python ដែលអាចប្រើឡើងវិញបាន អាចពង្រីកបាន និងត្រូវបានផ្ទៀងផ្ទាត់តាមរយៈការពិសោធន៍ សម្រាប់ clusterwise learning និង COBRA-based aggregation។
+\hs មិនទាន់សរសេរទេ ទាល់តែចប់បានសរសេរអត្ថបទចប់សព្វគ្រប់។
 
 \vspace{0.5cm}
-\noindent\textbf{ពាក្យគន្លឹះ:} Clusterwise learning, supervised learning, ensemble aggregation, COBRA, GradientCOBRA, machine learning framework, Python package.
+\noindent\textbf{ពាក្យគន្លឹះ:} មិនទាន់មានទេ។
 
 \end{khmer}

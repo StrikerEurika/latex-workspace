@@ -2,7 +2,9 @@
 
 \section{Introduction}
 
-\hs The automatic identification and segmentation of concrete and road pavement cracks are vital components of structural health monitoring (SHM) and transportation infrastructure maintenance. For decades, the civil engineering and computer vision communities have attempted to replace manual, subjective visual inspections with automated, objective, and reproducible frameworks. This chapter provides a comprehensive review of the historical developments, foundational deep learning paradigms, and specialized strategies that form the background of this thesis. First, traditional digital image processing methods are introduced alongside their inherent sensitivity to external noise. Second, the evolution of deep learning architectures for image segmentation, categorized into semantic, instance, and transformer-based paradigms, is analyzed. Third, real-world applications of artificial intelligence in crack detection across ground-level and aerial platforms are discussed, identifying the major research gaps. Finally, strategies for processing large-scale, high-resolution imagery exceeding hardware memory limits are reviewed.
+\hs The automatic identification and segmentation of concrete and road pavement cracks are vital components of structural health monitoring (SHM) and transportation infrastructure maintenance. For decades, the civil engineering and computer vision communities have attempted to replace manual, subjective visual inspections with automated, objective, and reproducible frameworks.
+
+\hs This chapter provides a comprehensive review of the historical developments, foundational deep learning paradigms, and specialized strategies that form the background of this thesis. \hl{First, traditional digital image processing methods are introduced alongside their inherent sensitivity to external noise}. Second, the evolution of deep learning architectures for image segmentation, categorized into semantic, instance, and transformer-based paradigms, is analyzed. Third, real-world applications of artificial intelligence in crack detection across ground-level and aerial platforms are discussed, identifying the major research gaps. Finally, strategies for processing large-scale, high-resolution imagery exceeding hardware memory limits are reviewed.
 
 \section{Traditional Crack Detection Methods}
 
@@ -26,19 +28,22 @@ Despite their historical significance, low computational cost, and high interpre
 
 \section{Deep Learning for Image Segmentation}
 
-\hs To overcome the fragility of handcrafted features, researchers have transitioned to deep-learning algorithms that autonomously learn hierarchical representations from raw image data \cite{zhang-2024a}. This section reviews the development of deep neural networks for pixel-level and instance-level crack segmentation.
+\hs To overcome the fragility of manual features, researchers have shifted to deep-learning algorithms that autonomously learn representations from raw image data \cite{zhang-2024a}. This section reviews the development of deep neural networks for pixel-level and instance-level crack segmentation.
 
 \subsection{Semantic Segmentation}
 
-Semantic segmentation treats crack extraction as a dense, pixel-level binary classification task, assigning a label of ``1'' to crack pixels and ``0'' to the background. This approach permits precise, pixel-wise delineation of irregular and tortuous crack shapes \cite{liu-2019}. The most foundational architectures deployed for this task include:
+\hs Semantic segmentation treats crack extraction as a dense, pixel-level binary classification task, assigning a label of ``1'' to crack pixels and ``0'' to the background. This method maps out the exact shape of cracks at the pixel level. \cite{liu-2019}. The commonly used foundational architectures for this task include:
 \begin{itemize}
-    \item \textbf{Fully Convolutional Networks (FCNs)}: FCNs discard fully connected layers in favor of convolutional and upsampling (deconvolutional) layers, allowing pixel-to-pixel training and inference for arbitrary image sizes. FCNs demonstrate that different stages of convolutional layers capture distinct levels of information; lower layers preserve spatial details, while deeper layers obtain abstract semantic context \cite{liu-2019}.
+    
     \item \textbf{U-Net}: Developed initially for medical image segmentation, U-Net utilizes a symmetric encoder-decoder structure with skip connections. The contracting path (encoder) captures multi-scale context, while the symmetric expanding path (decoder) resolves fine spatial details by directly concatenating low-level feature maps onto upsampled representations \cite{liu-2019, kirchhoff-2024}. Advanced variants, such as U-Net++, introduce nested and dense skip pathways to reduce the semantic gap between the encoder and decoder before feature fusion \cite{pereira-2025}.
+    
+    \item \textbf{Fully Convolutional Networks (FCNs)}: FCNs discard fully connected layers in favor of convolutional and upsampling (deconvolutional) layers, allowing pixel-to-pixel training and inference for arbitrary image sizes. FCNs demonstrate that different stages of convolutional layers capture distinct levels of information; lower layers preserve spatial details, while deeper layers obtain abstract semantic context \cite{liu-2019}.
+    
     \item \textbf{DeepLabV3+}: This architecture introduces Atrous Spatial Pyramid Pooling (ASPP) to expand the network's receptive field without losing spatial resolution \cite{goo-2025}. By utilizing atrous (dilated) convolutions with varying dilation rates, DeepLabV3+ effectively captures multi-scale context, which is critical for delineating both thin and wide cracks across diverse surfaces \cite{goo-2025,zhang-2024b}.
+
 \end{itemize}
 
 \hs Despite achieving high pixel-wise accuracy on standard benchmarks, semantic segmentation models face a fundamental bottleneck in crack detection: \textit{resolution reduction during downsampling}. As the input image passes through successive convolutional and pooling layers in the encoder, its spatial resolution is significantly reduced \cite{sohaib-2024}. For cracks that are only 1 to 3 pixels wide, this downsampling often erases their fine spatial signatures, leading to discontinuous, fragmented, or broken segmentation masks during upsampling \cite{zhang-2024b,zhang-2024c}.
-
 
 \subsection{Instance Segmentation}
 
