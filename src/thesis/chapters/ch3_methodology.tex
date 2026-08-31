@@ -1,0 +1,235 @@
+\chapter{METHODOLOGY}
+
+\section{Introduction}
+
+\hs This chapter describes the experimental design, data acquisition, model development, and evaluation procedures implemented during the internship project. The primary objective is to develop a robust and deployable deep learning framework for the automatic detection and pixel-level segmentation of cracks in large-scale, high-resolution aerial imagery captured by Unmanned Aerial Vehicles (UAVs) \cite{zhang-2024a, chen-2024}. The methodology has been designed to address the key technical objectives established in Chapter 1:
+
+\begin{itemize}
+    \item \textbf{Unify and standardize multiple public crack datasets} to construct a diverse and balanced data pool for model training.
+    \item \textbf{Develop and evaluate multiple state-of-the-art architectures} across semantic segmentation, instance segmentation, and transformer-based paradigms.
+    \item \textbf{Design and implement a tile-based inference pipeline with blended overlaps} to enable the seamless processing of arbitrarily large-scale images on a single Graphics Processing Unit (GPU).
+    \item \textbf{Validate the pipeline on a custom, high-resolution self-collected UAV dataset} to verify its real-world robustness.
+\end{itemize}
+
+\hs \hl{This research represents the culmination of a year-four internship as an \textbf{AI Engineer} at \textbf{AI Farm Robotics} (Phnom Penh, Cambodia), conducted under the department of \textbf{Applied Mathematics and Statistics (AMS)} under the supervision of H.E. Dr. \textbf{LI N Mongkolsery}, the academic advisorship of \textbf{PHALLY Rathavann}, and the industry supervision of \textbf{KHON Yin Sakal}. By bridging theoretical mathematical modeling with practical robotics deployment, this methodology establishes a standardized, reproducible technical route for automated infrastructure health monitoring.}
+
+\section{Data Acquisition and Preparation}
+
+\hs To train a robust and generalizable deep learning model, a diverse collection of data is required. This section details the curation of public benchmarks, the collection protocol of our custom UAV dataset, and the preprocessing steps established to unify these disparate sources.
+
+\subsection{Public Datasets}
+
+\hs \hl{Six publicly available datasets were selected to compile a comprehensive training database. Sourced from various geographic regions and environmental conditions, these datasets provide a rich variety of crack morphologies, surface materials, and resolutions:}
+
+\begin{enumerate}
+    \item \textbf{DeepCrack} \cite{liu-2019}: A standard benchmark consisting of 537 RGB images of concrete and asphalt pavement surfaces. It includes manually annotated pixel-level masks and represents varied background textures, classified as smooth, rough, or dirty.
+    \item \textbf{PaveSync} \cite{kyem-2025}: A large-scale consolidated dataset containing 52,747 multi-perspective images from seven countries. It includes 13 distinct distress categories with standardized annotation formats, capturing a wide range of real-world pavement conditions.
+    \item \textbf{DamCrack} \cite{gharehbaghi-2026a}: Sourced from concrete dam spillways in Spokane, Washington, USA. This dataset contains 11,288 high-resolution smartphone and drone images, capturing complex surface deterioration including cracks and spalling.
+    \item \textbf{DamSegment} \cite{gharehbaghi-2026b}: A curriculum-structured dataset containing 3,500 spillway patches. Images are sorted into Easy, Medium, and Hard subsets based on crack thickness and map-cracking density, facilitating progressive model training.
+    \item \textbf{CUBIT-InSeg} \cite{zhao-2026}: A high-resolution building facade instance segmentation dataset with 6,996 images ($4800 \times 3200$ pixels) and 62,187 annotated instances of cracks and spalling, representing complex urban viewing geometries and illumination variations.
+    \item \textbf{EdmCrack600} \cite{pereira-2025}: Consists of 600 high-resolution images ($1920 \times 1080$ pixels) of pavement surfaces in Edmonton, Canada, captured under diverse lighting and weather conditions.
+\end{enumerate}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Summary of public crack datasets used for model training.}
+    \label{tab:public_datasets}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{p{2.6cm}p{2.1cm}p{2.1cm}p{2.0cm}p{5.1cm}}
+            \hline
+            \textbf{Dataset} & \textbf{Samples} & \textbf{Resolution} & \textbf{Domain} & \textbf{Key characteristics} \\
+            \hline
+            DeepCrack & 537 & Variable RGB & Pavement & Concrete and asphalt cracks with pixel-wise masks; varied smooth, rough, and dirty surfaces. \\
+            PaveSync & 52,747 & Multi-perspective RGB & Global pavement & Large-scale dataset with multi-country pavement distress annotations across 13 categories. \\
+            DamCrack & 11,288 & High-resolution RGB & Spillway structures & Concrete deterioration imagery including cracks and spalling from dam infrastructure. \\
+            DamSegment & 3,500 & Patch-level RGB & Spillway structures & Curriculum-based crack severity subsets (Easy, Medium, Hard) for progressive training. \\
+            CUBIT-InSeg & 6,996 & $4800 \times 3200$ & Building facades & High-resolution crack and spalling instance masks under diverse urban geometries. \\
+            EdmCrack600 & 600 & $1920 \times 1080$ & Pavement & Diverse pavement imagery acquired under varying lighting and weather conditions. \\
+            \hline
+        \end{tabular}%
+    }
+\end{table}
+
+\subsection{Future Self-Collected UAV Dataset}
+
+\hs To bridge the domain gap between existing close-up public datasets and actual aerial inspection scenarios, a custom dataset was collected at a real-world infrastructure site in Cambodia. 
+
+\textbf{Collection Protocol:} A DJI Mavic 3 Enterprise UAV was deployed as the flight platform, carrying a high-resolution 20 MP RGB camera. The flight was executed over a 0.5-kilometer stretch of concrete and asphalt roads. To capture structural variations, the UAV maintained flight altitudes ranging between 30 and 45 meters, yielding a Ground Sampling Distance (GSD) of approximately 1.1 to 1.6 cm/pixel. This sub-centimeter GSD ensures that fine cracks (as thin as 1--3 pixels) remain visually distinct. The collection captured both dry conditions under direct sunlight and wet, partially shaded post-rain surfaces to simulate realistic inspection environments.
+
+\textbf{Annotation and Quality Control:} From the raw high-resolution images, 50 to 70 representative frames were selected for manual, pixel-level annotation. The annotation was performed using the open-source tool \textbf{LabelMe} \cite{zhao-2026}. To ensure high labeling consistency and minimize boundary ambiguity, a multi-stage validation workflow was implemented:
+\begin{itemize}
+    \item Three student annotators conducted the initial labeling of the images, tracing the precise crack contours.
+    \item They cross-checked each other's annotations to flag ambiguous regions caused by shadows, vegetation, or low local contrast.
+    \item Remaining boundary conflicts were reviewed and resolved under the supervision of a senior engineer, establishing a single ground-truth standard.
+\end{itemize}
+Out of the labeled frames, a subset of 10 to 20 images was reserved for model fine-tuning to align pre-trained models with the custom sensor and perspective, while the remaining frames served as the final validation and test set.
+
+\subsubsection{Annotation Unification and Standardization}
+
+\hs Disparate annotation formats across datasets (e.g., polygon coordinates, COCO JSON, Pascal XML) were unified into a single standardized format. The ground-truth annotations were converted into binary pixel-level masks, mathematically represented as a single-channel spatial matrix $M(x, y) \in \{0, 1\}$:
+
+\begin{equation}
+    M(x, y) = \begin{cases} 
+        1, & \text{if pixel } (x, y) \text{ belongs to a crack region} \\ 
+        0, & \text{otherwise (background)} 
+    \end{cases}
+\end{equation}
+
+\hs These masks were saved as consistent, lossless, single-channel 8-bit Portable Network Graphics (PNG) images, where a pixel value of 255 (white) denotes cracks and 0 (black) denotes the background. This standardization ensures seamless, uniform processing across the entire model pipeline.
+
+\subsubsection{Patch Extraction and Sliding Window Strategy}
+
+\hs To accommodate both small, pre-cropped images and very large, high-resolution aerial frames within a unified training pipeline, all source images and their corresponding binary masks were decomposed into fixed-size tiles of $512 \times 512$ pixels.
+
+\hs For training, a sliding window of size $512 \times 512$ pixels was moved across the source images. For source images smaller than $512 \times 512$ pixels, zero-padding was applied symmetrically to the boundaries to reach the target size without distorting the spatial aspect ratio.
+
+\hs For high-resolution inference, the sliding window utilized a step stride of 384 pixels, which corresponds to a 128-pixel overlap (or 25\% overlap) in both the horizontal and vertical directions. This overlap is crucial to ensure that cracks located near tile boundaries are not truncated or lost during independent tile forward passes.
+
+\subsubsection{Dataset Splitting}
+
+\hs To prevent information leakage and ensure a fair, unbiased performance evaluation, the dataset was split strictly at the \textbf{source-image level} rather than the tile level. All patches originating from a single source image were assigned exclusively to one of three subsets:
+\begin{itemize}
+    \item \textbf{Training Set (70\%):} Used to optimize network weights during backpropagation.
+    \item \textbf{Validation Set (15\%):} Used for hyperparameter tuning and model selection.
+    \item \textbf{Testing Set (15\%):} Reserved strictly as an independent set for final evaluation.
+\end{itemize}
+By enforcing source-image level splitting, tiles from the same physical road section or lighting condition were prevented from appearing in both the training and evaluation splits, thereby ensuring the generalizability of the performance metrics.
+
+\subsubsection{Data Augmentation Strategy}
+
+\hs To improve model generalization and prevent overfitting on limited datasets, a series of augmentations was applied identically to both the RGB image and its corresponding binary mask during training:
+\begin{itemize}
+    \item \textbf{Random Rotations (0--45$^\circ$):} Simulates UAV attitude and yaw variations.
+    \item \textbf{Horizontal and Vertical Flips:} Enhances spatial and direction invariance.
+    \item \textbf{Contrast Limited Adaptive Histogram Equalization (CLAHE):} Applied with a clip limit of 2.0 to enhance local contrast, mitigating shadows and severe overexposure.
+    \item \textbf{Gaussian Blur ($\sigma \le 1.5$):} Simulates slight focus variations, camera vibration, and motion blur during flight.
+\end{itemize}
+
+\section{Model Development and Selection}
+
+\hs To empirically evaluate the trade-offs between accuracy, inference speed, and spatial context-awareness, three distinct families of state-of-the-art segmentation architectures were selected and evaluated.
+
+\subsection{Baseline Architectures}
+
+\subsubsection{Semantic Segmentation: U-Net}
+
+These architectures serve as the primary baseline due to their high fidelity in producing dense, pixel-level classification outputs.
+\begin{itemize}
+    \item \textbf{\hl{U-Net (ResNet-34 Backbone):}} A symmetrical encoder-decoder network \cite{liu-2019, zhao-2026}. The encoder extracts rich feature hierarchies using a pre-trained ResNet-34 backbone, while the decoder recovers spatial resolution. Skip connections directly transfer high-resolution local features from the encoder to the decoder, preserving the fine details of thin cracks.
+    \item \textbf{\hl{DeepLabV3+:}} Incorporates Atrous Spatial Pyramid Pooling (ASPP) to capture multi-scale contextual information \cite{wang-2025, gharehbaghi-2026b}. By using dilated convolutions with varying sampling rates, it extracts context at multiple scales without losing spatial resolution, which is highly beneficial for cracks of varying widths.
+\end{itemize}
+
+\subsubsection{Instance Segmentation: YOLO}
+
+\hs These models are evaluated to assess whether treating distinct cracks as separate instances reduces noise and improves global delineation.
+\begin{itemize}
+    \item \textbf{\hl{YOLO (v26):}} Single-stage, anchor-free object detection and segmentation frameworks \cite{zhang-2024a, sohaib-2024}. YOLOv8 utilizes the C2f module to balance speed and feature diversity. YOLOv9 introduces Programmable Gradient Information (PGI) and the Generalized Efficient Layer Aggregation Network (GELAN) to retain spatial details. These models are expected to significantly reduce computational latency, making them ideal for edge-device deployment on autonomous robots \cite{zhang-2024b, zhang-2025}.
+\end{itemize}
+
+\subsubsection{Transformer-Based Models: SegFormer}
+
+\hs These architectures are evaluated for their superior capacity to model long-range spatial dependencies.
+\begin{itemize}
+    \item \textbf{SegFormer:} A hierarchical Transformer encoder combined with a lightweight MLP decoder \cite{pereira-2025}. It does not require positional encodings, avoiding performance drops when test resolution differs from training resolution, and maintains global spatial awareness across large receptive fields.
+    \item \textbf{Swin Transformer:} Utilizes a shifted-window self-attention scheme \cite{zhang-2024a}. By restricting self-attention computation to local, non-overlapping windows while allowing cross-window connections, it achieves linear computational complexity with respect to image size, capturing global context efficiently.
+\end{itemize}
+
+\subsection{Implementation Details (Frameworks, Hardware, Hyperparameters)}
+
+\hs The technical environment was built entirely on PyTorch (v2.0+) and Python 3.9, leveraging specialized libraries including OpenCV, Albumentations, and Ultralytics YOLO.
+
+\textbf{Hardware Specifications:} All experiments were conducted on a workstation equipped with an Intel i5-12600K CPU, 64 GB of RAM, and an NVIDIA RTX A6000 GPU with 48 GB of VRAM.
+
+\textbf{Hyperparameters and Optimization:} 
+\begin{itemize}
+    \item \textbf{Optimizer:} Stochastic Gradient Descent (SGD) with a momentum of 0.937, or AdamW with a weight decay of $1 \times 10^{-3}$ \cite{pereira-2025}.
+    \item \textbf{Learning Rate:} An initial learning rate of $1 \times 10^{-4}$, decaying using a Cosine Annealing schedule to $1 \times 10^{-6}$ over 100 epochs.
+    \item \textbf{Batch Size:} Set to 16 for training $512 \times 512$ patches.
+    \item \textbf{\hl{Loss Function:}} A hybrid formulation combining Binary Cross-Entropy (BCE) and Dice Loss to handle class imbalance, or the centerline Dice (clDice) loss \cite{shit-2021} to preserve connectivity:
+    \begin{equation}
+    L_{\text{total}} = \lambda \cdot L_{\text{clDice}} + (1 - \lambda) \cdot L_{\text{Dice}}
+    \end{equation}
+    where $\lambda = 0.5$ balances the volumetric and topological overlap \cite{shit-2021, pereira-2025}.
+\end{itemize}
+
+\section{Tile-Based Inference Pipeline for Gigapixel Images}
+
+\hs Standard convolutional neural networks cannot directly process extremely large aerial images (exceeding 100+ Megapixels) due to GPU memory limitations. To address this constraint, we designed and implemented a tile-based inference engine.
+
+\subsection{Sliding Window Extraction}
+
+\hs Given a high-resolution input image $I$ of size $W \times H$, the inference engine dynamically partitions the image into overlapping tiles of size $M \times N$ ($512 \times 512$ pixels) using a step stride of $S = 384$ pixels. The horizontal overlap $O_x$ and vertical overlap $O_y$ are set to 128 pixels (25\% overlap). If the image dimensions are not perfectly divisible by the stride, zero-padding is applied to the right and bottom boundaries to ensure all tiles have a uniform size.
+
+\subsection{Blended Overlap Merging for Seamless Reconstruction}
+
+To prevent artificial seam lines and edge discontinuities where adjacent tiles meet, we developed a blended overlap merging technique. We construct a 2D weight map $W(x, y)$ of the same spatial size as the tiles ($512 \times 512$ pixels), defined by the product of two 1D window functions:
+\begin{equation}
+W(x, y) = w_x(x) \cdot w_y(y)
+\end{equation}
+For a tile of size $L \times L$ (where $L = 512$), the 1D linear ramp window function $w_x(x)$ is defined over the interval $x \in [0, L-1]$ as:
+\begin{equation}
+w_x(x) = \begin{cases}
+\frac{x}{d}, & \text{if } 0 \le x < d \\
+1, & \text{if } d \le x < L - d \\
+\frac{L - 1 - x}{d}, & \text{if } L - d \le x < L
+\end{cases}
+\end{equation}
+where $d = 128$ is the overlap width. This ramp function assigns a weight of 1 to the center of the patch and smoothly decays to 0 at the overlapping boundaries.
+
+As the sliding window moves across the image grid, the predicted probability maps $P_k(x, y)$ generated by the network for each tile $k$ are mapped back to their global coordinate positions $(X, Y)$. The global probability map $P_{\text{global}}(X, Y)$ is computed as the weighted average of all overlapping predictions:
+\begin{equation}
+P_{\text{global}}(X, Y) = \frac{\sum_{k} W_k(x, y) \cdot P_k(x, y)}{\sum_{k} W_k(x, y)}
+\end{equation}
+where $W_k(x, y)$ is the weight assigned to pixel $(x, y)$ in the local tile $k$, mapped to the global coordinate $(X, Y)$. This formulation smoothly blends overlapping boundaries, eliminating abrupt transitions.
+
+\subsection{Post-Processing and Thresholding}
+
+\hl{The reconstructed global probability map $P_{\text{global}}(X, Y) \in [0, 1]$ is converted into a binary mask $B(X, Y) \in \{0, 1\}$ using a classification threshold $T_c$:}
+\begin{equation}
+B(X, Y) = \begin{cases} 
+1, & \text{if } P_{\text{global}}(X, Y) \ge T_c \\ 
+0, & \text{otherwise} 
+\end{cases}
+\end{equation}
+By default, $T_c$ is set to 0.5. 
+
+To remove isolated false-positive pixel noise caused by dust, shadows, or texturing, an area-based morphological filtering step is applied. Any connected component $C_i$ in the binary mask $B$ with a total area smaller than $A_{\text{min}}$ is discarded:
+\begin{equation}
+B_{\text{refined}}(X, Y) = \begin{cases} 
+0, & \text{if } (X, Y) \in C_i \text{ and } \text{Area}(C_i) < A_{\text{min}} \\ 
+B(X, Y), & \text{otherwise} 
+\end{cases}
+\end{equation}
+where the minimum component area is set to $A_{\text{min}} = 10$ pixels.
+
+\section{Evaluation Framework}
+
+This section describes the quantitative evaluation metrics and the protocol established to compare the performance of different models.
+
+\subsection{Evaluation Metrics}
+\label{subsec:metrics}
+
+Due to the extreme class imbalance in crack detection (where crack pixels typically occupy less than 1\% of the total image area), traditional pixel accuracy is highly misleading. A naive model predicting 100\% background would score $>99\%$ accuracy while failing completely. Therefore, the models are evaluated using metrics that focus on the positive class:
+\begin{enumerate}
+    \item \textbf{Intersection over Union (IoU):} Measures the ratio of overlapping area to union area between predicted mask $P$ and ground truth $G$:
+    \begin{equation}
+    \text{IoU} = \frac{|P \cap G|}{|P \cup G|} = \frac{\text{TP}}{\text{TP} + \text{FP} + \text{FN}}
+    \end{equation}
+    \item \textbf{Precision:} Measures the proportion of correctly predicted crack pixels among all predicted crack pixels:
+    \begin{equation}
+    \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+    \end{equation}
+    \item \textbf{Recall:} Measures the proportion of correctly predicted crack pixels among all true crack pixels:
+    \begin{equation}
+    \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+    \end{equation}
+    \item \textbf{F1-Score:} The harmonic mean of precision and recall, balancing false positives and false negatives:
+    \begin{equation}
+    \text{F1-Score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+    \end{equation}
+    \item \textbf{Inference Time:} Measured as the average processing time per Megapixel (seconds/MP) or Frames Per Second (FPS) on the target hardware to assess real-world deployability.
+\end{enumerate}
+
+\subsection{Baseline Comparisons}
+
+\hs The performance of each trained architecture is compared against other evaluated models under the same unified protocol. To verify their competitiveness, the results are compared with state-of-the-art metrics published in the literature \cite{liu-2019, zhang-2024c, sohaib-2024}. The objective is to identify which model paradigm offers the optimal balance between pixel-level connectivity conservation, boundary precision, and latency, providing a solid reference for actual edge-device deployment.

@@ -465,7 +465,7 @@ From the workspace root:
 cd project-root
 ```
 
-### Essential Commands for `ngt`
+### Essential Commands for `thesis`
 
 Run these commands from the workspace root (`/workspace`):
 
@@ -474,19 +474,19 @@ Run these commands from the workspace root (`/workspace`):
 chmod +x scripts/build-latex.sh
 
 # Fast build for normal text and layout changes
-./scripts/build-latex.sh "$PWD/src/ngt/main.tex" "$PWD" "$PWD/build/ngt" fast
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" "$PWD/build/thesis" fast
 
 # Full build with bibliography and cross-references
-./scripts/build-latex.sh "$PWD/src/ngt/main.tex" "$PWD" "$PWD/build/ngt" full
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" "$PWD/build/thesis" full
 
 # Clean rebuild after a terminated or broken build
-./scripts/build-latex.sh "$PWD/src/ngt/main.tex" "$PWD" "$PWD/build/ngt" full clean
+./scripts/build-latex.sh "$PWD/src/thesis/main.tex" "$PWD" "$PWD/build/thesis" full clean
 
 # Open the generated PDF
-xdg-open build/ngt/main.pdf
+xdg-open build/thesis/main.pdf
 ```
 
-The generated document is located at `build/ngt/main.pdf`.
+The generated document is located at `build/thesis/main.pdf`.
 
 Build a thesis project:
 
