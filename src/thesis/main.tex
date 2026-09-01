@@ -1,7 +1,7 @@
 \documentclass[12pt,a4paper]{report}
 
 % load style from thesisstyle
-\usepackage{thesisstyle}
+\usepackage{./thesisstyle}
 
 % Uncomment one chapter while drafting to skip the others.
 % \includeonly{chapters/ch2_literature_review}
@@ -13,16 +13,16 @@
 \input{settings/metadata}
 
 \begin{document}
-\input{frontmatter/01_cover}
-\input{frontmatter/02a_sub_cover_kh}
-\input{frontmatter/02b_sub_cover_fr}
-\input{frontmatter/02c_sub_cover_en}
+% \input{frontmatter/01_cover}
+% \input{frontmatter/02a_sub_cover_kh}
+% \input{frontmatter/02b_sub_cover_fr}
+% \input{frontmatter/02c_sub_cover_en}
 
-\clearpage
-\pagenumbering{Roman}
-\input{frontmatter/03_acknowledgement}
-\input{frontmatter/04a_abstract_kh}
-\input{frontmatter/04b_abstract_en}
+% \clearpage
+% \pagenumbering{Roman}
+% \input{frontmatter/03_acknowledgement}
+% \input{frontmatter/04a_abstract_kh}
+% \input{frontmatter/04b_abstract_en}
 
 \clearpage
 \tableofcontents
@@ -44,7 +44,7 @@
 % \input{chapters/ch0_thesis_placeholder}
 % \include{chapters/ch1_introduction}
 % \include{chapters/ch2_literature_review}
-% \include{chapters/ch3_methodology}
+\include{chapters/ch3_methodology}
 
 \clearpage
 \phantomsection

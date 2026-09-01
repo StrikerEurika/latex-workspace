@@ -18,51 +18,42 @@
 \hs To train a robust and generalizable deep learning model, a diverse collection of data is required. This section details the curation of public benchmarks, the collection protocol of our custom UAV dataset, and the preprocessing steps established to unify these disparate sources.
 
 \subsection{Public Datasets}
+\label{subsec:public-datasets}
 
-\hs \hl{Six publicly available datasets were selected to compile a comprehensive training database. Sourced from various geographic regions and environmental conditions, these datasets provide a rich variety of crack morphologies, surface materials, and resolutions:}
+\hs To build a diverse and robust training corpus, we aggregated publicly available crack detection datasets curated in the GitHub repository \textbf{Cv-learning/Crack-Dataset}. This repository consolidates multiple benchmark datasets from the literature, providing a unified collection of crack images with corresponding pixel-level annotations.
 
-\begin{enumerate}
-    \item \textbf{DeepCrack} \cite{liu-2019}: A standard benchmark consisting of 537 RGB images of concrete and asphalt pavement surfaces. It includes manually annotated pixel-level masks and represents varied background textures, classified as smooth, rough, or dirty.
-    \item \textbf{PaveSync} \cite{kyem-2025}: A large-scale consolidated dataset containing 52,747 multi-perspective images from seven countries. It includes 13 distinct distress categories with standardized annotation formats, capturing a wide range of real-world pavement conditions.
-    \item \textbf{DamCrack} \cite{gharehbaghi-2026a}: Sourced from concrete dam spillways in Spokane, Washington, USA. This dataset contains 11,288 high-resolution smartphone and drone images, capturing complex surface deterioration including cracks and spalling.
-    \item \textbf{DamSegment} \cite{gharehbaghi-2026b}: A curriculum-structured dataset containing 3,500 spillway patches. Images are sorted into Easy, Medium, and Hard subsets based on crack thickness and map-cracking density, facilitating progressive model training.
-    \item \textbf{CUBIT-InSeg} \cite{zhao-2026}: A high-resolution building facade instance segmentation dataset with 6,996 images ($4800 \times 3200$ pixels) and 62,187 annotated instances of cracks and spalling, representing complex urban viewing geometries and illumination variations.
-    \item \textbf{EdmCrack600} \cite{pereira-2025}: Consists of 600 high-resolution images ($1920 \times 1080$ pixels) of pavement surfaces in Edmonton, Canada, captured under diverse lighting and weather conditions.
-\end{enumerate}
+\hs The combined dataset comprises 8,818 RGB images and their binary segmentation masks, covering a wide variety of crack morphologies, surface materials (concrete, asphalt, brick, etc.), and imaging conditions (different lighting, shadows, and viewing angles). The specific datasets included in this aggregation are those listed in the repository’s documentation, which bring together well-known benchmarks such as CFD, Crack500, DeepCrack, Tunnel Crack, and other sources as indicated in the repository. All images were resampled to a consistent resolution and paired with their ground-truth masks.
 
 \begin{table}[htbp]
-    \centering
-    \caption{Summary of public crack datasets used for model training.}
-    \label{tab:public_datasets}
-    \resizebox{\textwidth}{!}{%
-        \begin{tabular}{p{2.6cm}p{2.1cm}p{2.1cm}p{2.0cm}p{5.1cm}}
-            \hline
-            \textbf{Dataset} & \textbf{Samples} & \textbf{Resolution} & \textbf{Domain} & \textbf{Key characteristics} \\
-            \hline
-            DeepCrack & 537 & Variable RGB & Pavement & Concrete and asphalt cracks with pixel-wise masks; varied smooth, rough, and dirty surfaces. \\
-            PaveSync & 52,747 & Multi-perspective RGB & Global pavement & Large-scale dataset with multi-country pavement distress annotations across 13 categories. \\
-            DamCrack & 11,288 & High-resolution RGB & Spillway structures & Concrete deterioration imagery including cracks and spalling from dam infrastructure. \\
-            DamSegment & 3,500 & Patch-level RGB & Spillway structures & Curriculum-based crack severity subsets (Easy, Medium, Hard) for progressive training. \\
-            CUBIT-InSeg & 6,996 & $4800 \times 3200$ & Building facades & High-resolution crack and spalling instance masks under diverse urban geometries. \\
-            EdmCrack600 & 600 & $1920 \times 1080$ & Pavement & Diverse pavement imagery acquired under varying lighting and weather conditions. \\
-            \hline
-        \end{tabular}%
-    }
+\centering
+\setlength{\tabcolsep}{5pt}
+\caption{Detailed specifications of the constituent public crack datasets.}
+\label{tab:constituent_datasets}
+\begin{tabularx}{\textwidth}{l l X X}
+\toprule
+\textbf{Dataset} & \textbf{Images} & \textbf{Surface} & \textbf{Academic Citation} \\
+\midrule
+\textbf{CFD} & 118 & Asphalt pavement & Shi et al. (2016) \cite{shi-2016} \\
+\addlinespace
+\textbf{Crack500} & 500 & Concrete pavements & Zhang et al. (2016) \cite{zhang-2016} \\
+\addlinespace
+\textbf{DeepCrack} & 537 & Cement, asphalt, and concrete & Liu et al. (2019) \cite{liu-2019} \\
+\addlinespace
+\textbf{Tunnel Crack} & \textbf{7,663} & Concrete tunnel walls & CV-learning Repository\footnotemark[1] \\
+\midrule
+\textbf{Total} & \textbf{8,818} & \textbf{Mixed structural surfaces} & \textbf{Combined Dataset} \\
+\bottomrule
+\end{tabularx}
 \end{table}
+\footnotetext[1]{Retrieved from: \url{https://github.com/Cv-learning/Crack-Dataset}.}
 
-\subsection{Future Self-Collected UAV Dataset}
+\subsection{Self-Collected UAV Dataset}
 
-\hs To bridge the domain gap between existing close-up public datasets and actual aerial inspection scenarios, a custom dataset was collected at a real-world infrastructure site in Cambodia. 
+\hs To complement the publicly available datasets with real-world aerial imagery, a custom UAV-based crack dataset was proposed for collection by the Drone Operations Department at AI Farm Robotics. This dataset would serve to validate the generalisability of the proposed framework on genuine high-resolution infrastructure inspection imagery, addressing the domain gap between close-up public datasets and actual UAV capture conditions.
 
-\textbf{Collection Protocol:} A DJI Mavic 3 Enterprise UAV was deployed as the flight platform, carrying a high-resolution 20 MP RGB camera. The flight was executed over a 0.5-kilometer stretch of concrete and asphalt roads. To capture structural variations, the UAV maintained flight altitudes ranging between 30 and 45 meters, yielding a Ground Sampling Distance (GSD) of approximately 1.1 to 1.6 cm/pixel. This sub-centimeter GSD ensures that fine cracks (as thin as 1--3 pixels) remain visually distinct. The collection captured both dry conditions under direct sunlight and wet, partially shaded post-rain surfaces to simulate realistic inspection environments.
+\hs However, at the time of writing, the status of this data collection effort—including whether acquisition has commenced or completed—was not confirmed by the Drone Operations Department. Consequently, the dataset and its associated metadata were not available for integration into the current experimental pipeline.
 
-\textbf{Annotation and Quality Control:} From the raw high-resolution images, 50 to 70 representative frames were selected for manual, pixel-level annotation. The annotation was performed using the open-source tool \textbf{LabelMe} \cite{zhao-2026}. To ensure high labeling consistency and minimize boundary ambiguity, a multi-stage validation workflow was implemented:
-\begin{itemize}
-    \item Three student annotators conducted the initial labeling of the images, tracing the precise crack contours.
-    \item They cross-checked each other's annotations to flag ambiguous regions caused by shadows, vegetation, or low local contrast.
-    \item Remaining boundary conflicts were reviewed and resolved under the supervision of a senior engineer, establishing a single ground-truth standard.
-\end{itemize}
-Out of the labeled frames, a subset of 10 to 20 images was reserved for model fine-tuning to align pre-trained models with the custom sensor and perspective, while the remaining frames served as the final validation and test set.
+\hs The incorporation of this self-collected dataset is therefore deferred to future collaborative work between the Drone Operations Department and the AI Engineering team. Once collected and properly annotated, this dataset will provide a valuable testbed for evaluating model performance on real-world aerial inspection scenarios. For the present study, all experiments are conducted exclusively using the publicly available datasets described in Section~\ref{subsec:public-datasets}.
 
 \subsubsection{Annotation Unification and Standardization}
 
@@ -85,14 +76,28 @@ Out of the labeled frames, a subset of 10 to 20 images was reserved for model fi
 
 \hs For high-resolution inference, the sliding window utilized a step stride of 384 pixels, which corresponds to a 128-pixel overlap (or 25\% overlap) in both the horizontal and vertical directions. This overlap is crucial to ensure that cracks located near tile boundaries are not truncated or lost during independent tile forward passes.
 
-\subsubsection{Dataset Splitting}
+\textbf{Dataset Splitting:} To ensure fair and unbiased evaluation, the entire set of 8,818 images was divided strictly at the image level (not at the patch level) into three disjoint subsets:
 
-\hs To prevent information leakage and ensure a fair, unbiased performance evaluation, the dataset was split strictly at the \textbf{source-image level} rather than the tile level. All patches originating from a single source image were assigned exclusively to one of three subsets:
-\begin{itemize}
-    \item \textbf{Training Set (70\%):} Used to optimize network weights during backpropagation.
-    \item \textbf{Validation Set (15\%):} Used for hyperparameter tuning and model selection.
-    \item \textbf{Testing Set (15\%):} Reserved strictly as an independent set for final evaluation.
-\end{itemize}
+\begin{table}[htbp]
+\centering
+\caption{Summary of public crack dataset partition.}
+\label{tab:dataset_split}
+\renewcommand{\arraystretch}{1.1}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc l}
+\toprule
+\textbf{Dataset Split} & \textbf{Split Percentage (\%)} & \textbf{Paired Image Count} & \textbf{Role in Training Pipeline} \\
+\midrule
+Training & 80\% & 7,054 & Active gradient optimization \& backpropagation \\
+Validation & 10\% & 882 & Hyperparameter selection \& overfitting prevention \\
+Testing & 10\% & 882 & Independent, unseen benchmark evaluation \\
+\midrule
+\textbf{Total} & \textbf{100\%} & \textbf{8,818} & \textbf{Comprehensive Compiled Public Database} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
 By enforcing source-image level splitting, tiles from the same physical road section or lighting condition were prevented from appearing in both the training and evaluation splits, thereby ensuring the generalizability of the performance metrics.
 
 \subsubsection{Data Augmentation Strategy}

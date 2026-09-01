@@ -1,0 +1,17 @@
+[
+  {
+    "key": "ctrl+alt+b",
+    "command": "latex-workshop.build",
+    "when": "editorTextFocus && editorLangId == 'latex'"
+  },
+  {
+    "key": "ctrl+alt+r", 
+    "command": "latex-workshop.latexTools.run",
+    "when": "editorTextFocus && editorLangId == 'latex'"
+  },
+  {
+    "key": "ctrl+alt+l",
+    "command": "latex-workshop.toggleLivePreview", 
+    "when": "editorTextFocus && editorLangId == 'latex'"
+  }
+]
