@@ -97,20 +97,23 @@ build_pdf() {
 if [[ "$MODE" == "watch" ]]; then
   echo "Starting watch mode. Press Ctrl+C to stop."
   echo "Watching for changes in: $DOC_DIR"
-  
+
+  mkdir -p "$OUTDIR"
+  touch "$OUTDIR/watchmarker"
+
   # Build once first
   build_pdf
-  
+
   # Watch for changes
   while true; do
     # Wait a moment for file system to settle
     sleep 1
-    
+
     # Check if any relevant files have been modified
     if find "$DOC_DIR" -type f \( -name "*.tex" -o -name "*.bib" -o -name "*.sty" -o -name "*.cls" \) -newer "$OUTDIR/watchmarker" 2>/dev/null | grep -q .; then
-      # Update the watch marker timestamp
-      touch "$OUTDIR/watchmarker" 2>/dev/null || mkdir -p "$OUTDIR" && touch "$OUTDIR/watchmarker"
-      
+      # Update the watch marker timestamp after a successful rebuild
+      touch "$OUTDIR/watchmarker"
+
       echo ""
       echo "Detected file changes. Rebuilding..."
       build_pdf

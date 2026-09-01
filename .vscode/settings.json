@@ -1,9 +1,14 @@
 {
-  "latex-workshop.latex.autoBuild.run": "onType",
-  "latex-workshop.latex.autoBuild.onSave": false,
+  "latex-workshop.latex.autoBuild.run": "onSave",
   "latex-workshop.latex.autoBuild.interval": 250,
   "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/thesis",
-  "latex-workshop.latex.recipe.default": "general: xelatex fast",
+  "latex-workshop.latex.recipe.default": "general: xelatex + biber",
+  "latex-workshop.latex.root": "%WORKSPACE_FOLDER%/src/thesis",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild": true,
+  "latex-workshop.latex.refresh.pdf": true,
+  "latex-workshop.latex.autoClean.run": "onFailed",
+  "latex-workshop.formatting.latex": "latexindent",
   "latex-workshop.latex.recipes": [
     {
       "name": "general: xelatex fast",
@@ -24,7 +29,7 @@
       "command": "/bin/bash",
       "args": [
         "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
-        "%DOC%",
+        "%WORKSPACE_FOLDER%/src/thesis/main.tex",
         "%WORKSPACE_FOLDER%",
         "%OUTDIR%",
         "fast"
@@ -36,7 +41,7 @@
       "command": "/bin/bash",
       "args": [
         "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
-        "%DOC%",
+        "%WORKSPACE_FOLDER%/src/thesis/main.tex",
         "%WORKSPACE_FOLDER%",
         "%OUTDIR%",
         "full"
