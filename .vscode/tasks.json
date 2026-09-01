@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build LaTeX (Full)",
+      "type": "process",
+      "command": "/bin/bash",
+      "args": [
+        "/workspace/scripts/build-latex.sh",
+        "thesis",
+        "/workspace", 
+        "/workspace/build/thesis",
+        "full"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Build LaTeX (Fast)",
+      "type": "process", 
+      "command": "/bin/bash",
+      "args": [
+        "/workspace/scripts/build-latex.sh",
+        "thesis",
+        "/workspace",
+        "/workspace/build/thesis",
+        "fast"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}

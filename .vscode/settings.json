@@ -1,101 +1,52 @@
 {
-  // =========================================================
-  // BUILD
-  // =========================================================
   "latex-workshop.latex.autoBuild.run": "onSave",
-  // Keep each source project in its own viewer-tracked output directory.
+  "latex-workshop.latex.autoBuild.interval": 250,
   "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build/thesis",
-  // Rebuild also when .sty, .cls, .bib files are saved
-  "latex-workshop.latex.autoBuild.onSave.files.ignore": [],
-  // Important for multi-folder src structure
-  "latex-workshop.latex.rootFile.useSubFile": false,
-  // =========================================================
-  // RECIPES
-  // =========================================================
+  "latex-workshop.latex.recipe.default": "general: xelatex + biber",
+  "latex-workshop.latex.root": "%WORKSPACE_FOLDER%/src/thesis",
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild": true,
+  "latex-workshop.latex.refresh.pdf": true,
+  "latex-workshop.latex.autoClean.run": "onFailed",
+  "latex-workshop.formatting.latex": "latexindent",
   "latex-workshop.latex.recipes": [
-    {
-      "name": "general: xelatex + biber",
-      "tools": [
-        "general-full"
-      ]
-    },
     {
       "name": "general: xelatex fast",
       "tools": [
         "general-fast"
       ]
+    },
+    {
+      "name": "general: xelatex + biber",
+      "tools": [
+        "general-full"
+      ]
     }
   ],
-  "latex-workshop.latex.recipe.default": "general: xelatex + biber",
-  // =========================================================
-  // TOOLS
-  // =========================================================
   "latex-workshop.latex.tools": [
-    {
-      "name": "general-full",
-      "command": "/bin/bash",
-      "args": [
-        "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
-        "%DOC%",
-        "%WORKSPACE_FOLDER%",
-        "%OUTDIR%",
-        "full"
-      ],
-      "env": {}
-    },
     {
       "name": "general-fast",
       "command": "/bin/bash",
       "args": [
         "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
-        "%DOC%",
+        "%WORKSPACE_FOLDER%/src/thesis/main.tex",
         "%WORKSPACE_FOLDER%",
         "%OUTDIR%",
         "fast"
       ],
       "env": {}
+    },
+    {
+      "name": "general-full",
+      "command": "/bin/bash",
+      "args": [
+        "%WORKSPACE_FOLDER%/scripts/build-latex.sh",
+        "%WORKSPACE_FOLDER%/src/thesis/main.tex",
+        "%WORKSPACE_FOLDER%",
+        "%OUTDIR%",
+        "full"
+      ],
+      "env": {}
     }
-  ],
-  // =========================================================
-  // Exclude files from 
-  // =========================================================
-  "files.watcherExclude": {
-    "**/build/**": true,
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/.DS_Store": true,
-    "**/Thumbs.db": true
-  },
-  "search.exclude": {
-    "**/build/**": true,
-    "**/node_modules": true,
-    "**/bower_components": true,
-    "**/*.code-search": true
-  },
-  // =========================================================
-  // VIEWER & SYNCTEX
-  // =========================================================
-  "latex-workshop.view.pdf.viewer": "tab",
-  "latex-workshop.synctex.afterBuild.enabled": true,
-  // =========================================================
-  // FORMATTING
-  // =========================================================
-  "latex-workshop.formatting.latex": "latexindent",
-  // =========================================================
-  // CLEAN
-  // =========================================================
-  "latex-workshop.latex.autoClean.run": "never",
-  // =========================================================
-  // EDITOR QUALITY OF LIFE
-  // =========================================================
-  "latex-workshop.intellisense.package.enabled": true,
-  "latex-workshop.latex.autoBuild.interval": 3000,
-  "[latex]": {
-    "editor.formatOnSave": false,
-    "editor.wordWrap": "on",
-    "editor.rulers": [
-      100
-    ]
-  }
+  ]
 }
