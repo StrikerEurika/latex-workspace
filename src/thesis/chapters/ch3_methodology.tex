@@ -11,8 +11,6 @@
     \item \textbf{Validate the pipeline on a custom, high-resolution self-collected UAV dataset} to verify its real-world robustness.
 \end{itemize}
 
-\hs \hl{This research represents the culmination of a year-four internship as an \textbf{AI Engineer} at \textbf{AI Farm Robotics} (Phnom Penh, Cambodia), conducted under the department of \textbf{Applied Mathematics and Statistics (AMS)} under the supervision of H.E. Dr. \textbf{LI N Mongkolsery}, the academic advisorship of \textbf{PHALLY Rathavann}, and the industry supervision of \textbf{KHON Yin Sakal}. By bridging theoretical mathematical modeling with practical robotics deployment, this methodology establishes a standardized, reproducible technical route for automated infrastructure health monitoring.}
-
 \section{Data Acquisition and Preparation}
 
 \hs To train a robust and generalizable deep learning model, a diverse collection of data is required. This section details the curation of public benchmarks, the collection protocol of our custom UAV dataset, and the preprocessing steps established to unify these disparate sources.
@@ -48,26 +46,17 @@
 
 \footnotetext[1]{Retrieved from: \url{https://github.com/Cv-learning/Crack-Dataset}.}
 
-\subsection{Self-Collected UAV Dataset}
+\subsection{Planned Self-Collected UAV Dataset}
 
-\hs To complement the publicly available datasets with real-world aerial imagery, a custom UAV-based crack dataset was proposed for collection by the Drone Operations Department at AI Farm Robotics. This dataset would serve to validate the generalisability of the proposed framework on genuine high-resolution infrastructure inspection imagery, addressing the domain gap between close-up public datasets and actual UAV capture conditions.
+\hs To complement the public benchmarks with real-world aerial imagery, a custom UAV-based crack dataset was proposed for collection by the Drone Operations Department at AI Farm Robotics. The intended acquisition protocol specified flights at an altitude of 10–15 m using a high-resolution RGB sensor, targeting building facades and rooftops in Phnom Penh, with annotations to be performed manually by trained technicians.
 
-\hs However, at the time of writing, the status of this data collection effort, including whether acquisition has commenced or completed, was not confirmed by the Drone Operations Department. Consequently, the dataset and its associated metadata were not available for integration into the current experimental pipeline.
+\hs However, at the time of this internship (July–September 2026), the data collection and annotation pipeline had not been completed by the Drone Operations Department. Consequently, this dataset was not available for integration into the training, validation, or testing phases of the current study.
 
-\hs The incorporation of this self-collected dataset is therefore deferred to future collaborative work between the Drone Operations Department and the AI Engineering team. Once collected and properly annotated, this dataset will provide a valuable testbed for evaluating model performance on real-world aerial inspection scenarios. For the present study, all experiments are conducted exclusively using the publicly available datasets described in Section~\ref{subsec:public-datasets}.
+\hs The absence of this dataset does not invalidate the experimental framework, as the aggregated public datasets (Section~\ref{subsec:public-datasets}) provide a sufficiently diverse and challenging benchmark covering multiple surface types, lighting conditions, and crack morphologies. Validation on genuine UAV-captured imagery remains an important direction for future work, contingent on the completion of the data collection effort by the drone team.
 
 \subsection{Annotation Unification and Standardization}
 
-\hs To make all training data compatible, the annotation formats from different sources were converted into one common representation.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{figures/cracks/crack-map.png}
-    \caption{\textit{Binary pixel-level annotation used for model training and evaluation.}}
-    \label{fig:crack_map}
-\end{figure}
-
-\hs Each ground-truth label was transformed into a binary pixel mask, where every pixel is assigned either a crack or background value. Mathematically, this is represented as a single-channel map $M(x, y) \in \{0, 1\}$ \cite{liu-2019}:
+\hs To make all training data compatible, the annotation formats from different sources were converted into a common binary pixel representation. Each ground-truth label was transformed into a single-channel mask, where the mathematical definition is:
 
 \begin{equation}
     M(x, y) = \begin{cases}
@@ -76,56 +65,70 @@
     \end{cases}
 \end{equation}
 
-\hs In practice, these masks are stored as simple, lossless single-channel PNG files. A pixel value of 255 (white) represents a crack, while 0 (black) represents the background. This standardization makes the data consistent and easy to process across the entire training and evaluation pipeline.
+\hs For practical storage, these binary masks were saved as 8-bit single-channel PNG files. In this format, a pixel value of \textbf{255 (white)} represents a crack, corresponding to the mathematical value $1$, while a pixel value of \textbf{0 (black)} represents the background, corresponding to the mathematical value $0$. During data loading, the pixel values are normalized by dividing by 255 to recover the $\{0,1\}$ representation used for model training and loss computation. This dual representation, mathematical $\{0,1\}$ for computation and $\{0,255\}$ for storage, is standard practice in image segmentation and ensures compatibility with both deep learning frameworks and standard image I/O libraries.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/cracks/crack-map.png}
+    \caption{\textit{Binary pixel-level annotation used for model training and evaluation.}}
+    \label{fig:crack_map}
+\end{figure}
+
+\hs This unified annotation scheme ensures consistent processing across all datasets. The binary representation simplifies loss computation and metric calculation while preserving pixel-level spatial precision.
 
 \subsection{Patch Extraction and Sliding Window Strategy}
 
-\hs To accommodate images of varying resolutions within a unified training and inference pipeline, all source images and their corresponding binary masks were decomposed into fixed-size tiles of
-$512 \times 512$ pixels.
+\hs To accommodate images of varying resolutions within a unified training and inference pipeline, all source images and their corresponding binary masks were decomposed into fixed-size tiles of \(512 \times 512\) pixels.
 
-\textbf{Training Phase:} For images with original dimensions of \(448 \times 448\) pixels, symmetric zero-padding was applied to the boundaries to reach the target size of \(512 \times 512\) pixels. This padding ensures that the spatial aspect ratio is preserved without distorting the crack features, while standardizing all inputs to a uniform dimension for batch processing. The padding strategy is mathematically defined as:
+\textbf{Training Phase}
 
-\begin{equation}
-    \text{Pad}_{\text{left}} = \text{Pad}_{\text{right}} = \left\lceil \frac{512 - 448}{2} \right\rceil = 32 \text{ pixels}
-\end{equation}
+\hs All training images were sourced exclusively from the public crack datasets described in Section~\ref{subsec:public-datasets}. These images have a native resolution of \(448 \times 448\) pixels. To standardize inputs for batch processing, symmetric zero-padding was applied to the boundaries to reach the target size of \(512 \times 512\) pixels, as illustrated in Figure~\ref{fig:training_image_resize}. This padding ensures that the spatial aspect ratio is preserved without distorting the crack features.
 
-\begin{equation}
-    \text{Pad}_{\text{top}} = \text{Pad}_{\text{bottom}} = \left\lceil \frac{512 - 448}{2} \right\rceil = 32 \text{ pixels}
-\end{equation}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/cracks/image-resizing.png}
+    \caption{\textit{Padding for training images, showing the symmetric zero-padding applied to reach the target size of \(512 \times 512\) pixels.}}
+    \label{fig:training_image_resize}
+\end{figure}
 
-\textbf{Inference Phase:} For high-resolution inference, the sliding window utilized a step stride of 384 pixels, which corresponds to a 128-pixel overlap (or \(25\%\) overlap) in both the horizontal and vertical directions. This overlap is crucial to ensure that cracks located near tile boundaries are not truncated or lost during independent tile forward passes.
+\textbf{Inference Phase}
 
-The overlap is calculated as:
+\hs For high-resolution inference, the sliding window strategy was designed to process arbitrarily large images that exceed GPU memory limits. The window size was set to \(512 \times 512\) pixels with a stride of 384 pixels, corresponding to a 128-pixel overlap (25\%) in both horizontal and vertical directions.
 
-\begin{equation}
-    O_x = O_y = 512 - 384 = 128 \text{ pixels}
-\end{equation}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/cracks/inference-patching.png}
+    \caption{\textit{Sliding window for high-resolution inference, showing the overlap between adjacent patches.}}
+    \label{fig:inference_patching}
+\end{figure}
 
-\begin{equation}
-    \text{Overlap Ratio} = \frac{128}{512} \times 100\% = 25\%
-\end{equation}
+\hs This overlap ensures that cracks located near tile boundaries are not truncated or lost during independent tile forward passes.
+
+\hs \hl{The inference pipeline was validated on high-resolution test images of approximately 10 megapixels,} which were sourced from the public datasets' test split (where native resolutions exceeded \(512 \times 512\)) and used exclusively for evaluation. These images, while not reaching the gigapixel scale targeted for final deployment, were sufficiently large to demonstrate the effectiveness of the tile-based approach and the blended overlap merging strategy. The pipeline is architecturally scalable to gigapixel images, as the tile processing is independent of total image dimensions, requiring only sufficient disk storage and sequential processing.
+
+\hs \hl{If an input image's dimensions are not perfectly divisible by the stride, zero-padding is temporarily applied to the right and bottom boundaries. After the blended overlap merging reconstructs the full probability map, the padded regions are cropped back to the original image dimensions.}
 
 \begin{table}[h]
     \centering
-    \caption{Summary of patch extraction parameters}
+    \caption{Summary of patch extraction and sliding window parameters}
     \label{tab:patch_parameters}
     \renewcommand{\arraystretch}{1.1}
     \begin{tabular}{@{}l c@{}}
         \toprule
-        \textbf{Parameter}                 & \textbf{Value}            \\
+        \textbf{Parameter}                     & \textbf{Value}            \\
         \midrule
-        Original image size                & \(448 \times 448\) pixels \\
-        Patch size (training \& inference) & \(512 \times 512\) pixels \\
-        Padding per side                   & 32 pixels                 \\
-        Stride (inference)                 & 384 pixels                \\
-        Overlap                            & 128 pixels (\(25\%\))     \\
+        Training image size (before padding)   & \(448 \times 448\) pixels \\
+        Training patch size (after padding)    & \(512 \times 512\) pixels \\
+        Testing image size (before extraction) & <10 megapixels            \\
+        Inference patch size                   & \(512 \times 512\) pixels \\
+        Inference overlap                      & 128 pixels (\(25\%\))     \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\hs For high-resolution inference, the sliding window utilized a step stride of 384 pixels, which corresponds to a 128-pixel overlap (or 25\% overlap) in both the horizontal and vertical directions. This overlap is crucial to ensure that cracks located near tile boundaries are not truncated or lost during independent tile forward passes.
+\subsection{Dataset Splitting}
 
-\textbf{Dataset Splitting:} To ensure fair and unbiased evaluation, the entire set of 8,818 images was divided strictly at the image level into three disjoint subsets:
+\hs To ensure fair and unbiased evaluation, the entire set of 8,818 images was divided strictly at the image level into three disjoint subsets:
 
 \begin{table}[htbp]
     \centering
@@ -149,17 +152,56 @@ The overlap is calculated as:
 
 \hs By enforcing source-image level splitting, tiles from the same physical road section or lighting condition were prevented from appearing in both the training and evaluation splits, thereby ensuring the generalizability of the performance metrics.
 
-\textbf{Data Augmentation Strategy:} To improve model generalization and prevent overfitting on limited datasets, a series of augmentations was applied identically to both the RGB image and its corresponding binary mask during training:
+\subsection{Data Augmentation Strategy}
+
+\hs To improve model generalization and prevent overfitting on the limited training data, a series of augmentations was applied \hl{online} during training. Each augmentation was applied to both the RGB image and its corresponding binary mask to maintain spatial correspondence for geometric transforms.
+
+\hs The augmentation strategy varied slightly across model families due to differences in the underlying training frameworks. All augmentations were applied only to the training split; the validation and test splits were left unaltered.
+
+\textbf{For U-Net and SegFormer (SMP-based models):}
+
+\begin{table}[h]
+    \centering
+    \caption{Data augmentation parameters for SMP-based models (U-Net and SegFormer).}
+    \label{tab:augmentation_smp}
+    \renewcommand{\arraystretch}{1.25}
+    \small
+    \begin{tabular}{@{}l l c@{}}
+        \toprule
+        \textbf{Augmentation} & \textbf{Parameters}                                                     & \textbf{Probability} \\
+        \midrule
+        Horizontal Flip       & -                                                                       & 0.5                  \\
+        Vertical Flip         & -                                                                       & 0.5                  \\
+        Rotation              & \(\pm 15^\circ\)                                                        & 0.5                  \\
+        Shift-Scale-Rotate    & scale \(\pm 10\%\), rotation \(\pm 15^\circ\)                           & 0.5                  \\
+        Brightness-Contrast   & brightness \(\pm 20\%\), contrast \(\pm 20\%\)                          & 0.5                  \\
+        Color Jitter          & brightness \(\pm 10\%\), contrast \(\pm 10\%\), saturation \(\pm 10\%\) & 0.5                  \\
+        Random Shadow         & shadow\_roi = (0, 0.5, 1, 1)                                            & 0.5                  \\
+        Gauss Noise           & var\_limit = (10, 50)                                                   & 0.2                  \\
+        Motion Blur           & blur\_limit = 5                                                         & 0.2                  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\hs After augmentation, images were normalized using \textbf{ImageNet} mean [0.485, 0.456, 0.406] and standard deviation [0.229, 0.224, 0.225] as required by the pre-trained backbones.
+
+\textbf{For YOLO (Ultralytics framework):}
+
+\hs YOLO employs the native augmentation pipeline integrated within the Ultralytics framework. The default augmentations were used with the following parameters:
 
 \begin{itemize}
-    \item \textbf{Random Rotations (0--45$^\circ$):} Simulates UAV attitude and yaw variations.
-    \item \textbf{Horizontal and Vertical Flips:} Enhances spatial and direction invariance.
-    \item \textbf{Gaussian Blur ($\sigma \le 1.5$):} Simulates slight focus variations, camera vibration, and motion blur during flight.
+    \item \textbf{HSV Augmentation}: Hue ($\pm$0.015), Saturation ($\pm$0.7), Value ($\pm$0.4)
+    \item \textbf{Geometric}: Horizontal flip (p=0.5), Scale ($\pm$0.5)
+    \item \textbf{Albumentations} (applied with lower probability): Blur, Median Blur, Grayscale conversion, CLAHE (Contrast Limited Adaptive Histogram Equalization)
 \end{itemize}
+
+\hs These augmentations are automatically applied during training and are optimized for the YOLO architecture's single-stage detection pipeline. No vertical flips, rotations, or photometric augmentations were applied to YOLO training as these are not included in the default Ultralytics segmentation augmentation configuration.
 
 \section{Model Development and Selection}
 
 \hs To empirically evaluate the trade-offs between accuracy, inference speed, and spatial context-awareness, three distinct families of state-of-the-art segmentation architectures were selected and evaluated.
+
+\hs
 
 \subsection{Baseline Architectures}
 
