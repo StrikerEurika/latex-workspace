@@ -7,12 +7,12 @@
 \subsection{Objective of Internship}
 
 \hs \hl{Build an accurate, precise, and practically deployable AI model to detect and segment cracks presenting on
-large buildings, contributing to reduced infrastructural improvement, early maintenance and public safety.
+    large buildings, contributing to reduced infrastructural improvement, early maintenance and public safety.
+    
+    This project aims to design and validate a deep learning framework for automatic, pixel-level crack
+    segmentation in high-resolution aerial imagery. Specific goals are to:}
 
-This project aims to design and validate a deep learning framework for automatic, pixel-level crack
-segmentation in high-resolution aerial imagery. Specific goals are to:}
-
-\begin{itemize}
+\begin{itemize}        
     \item Develop an empirical experiment on segmentation and detection models using modified Semantic Segmentation Models, Instance Segmentation models, and transformer-based models that are capable of capturing fine cracks on high-resolution images.
     \item Implement a tile-based inference pipeline with blended overlaps, allowing seamless processing of arbitrarily large-scale, high-resolution images on a single GPU.
     \item Evaluate the system on multiple real-world aerial crack datasets, comparing against published baselines.
@@ -36,13 +36,13 @@ This duration included activities such as defining the project, beginning with l
 \end{figure}
 
 \hs \textbf{AI Farm Robotics (AI Farm Co., Ltd.)} is a technology-driven robotics manufacturing company based in Phnom Penh, Cambodia. Operating as a subsidiary of the Khamsa Group of Businesses (KGB), the firm was founded to drive national technological sovereignty and transform Cambodia into a prominent robotics nation in Asia. The company's headquarters and primary research facility are located at \textbf{Connexion Building First Floor, Street Koh Pich, Sangkat
-Tonle Bassac, Khan Chamkar Mon, Phnom Penh, Cambodia}. From this hub, the company spearheads local innovation by specializing in the research and development of artificial intelligence, automated machinery, robot arms, mobile robots, drones, and tailored industrial automation systems.The company actively focuses on supporting micro, small, and medium enterprises (MSMEs) through flexible business models, including custom engineering, manufacturing, and Robot as a Service (RaaS) deployments. Beyond commercial production, AI Farm Robotics plays a vital role in national capacity building by running educational programs like the Robot Young Academy and dedicated STEM courses. These initiatives are designed to upskill the local workforce, prepare students for the digital economy, and close the technological gap in the region. By collaborating with domestic and international universities, trade organizations, and government bodies, the company continues to expand its technological portfolio and accelerate automated industrial adoption across Southeast Asia.
+    Tonle Bassac, Khan Chamkar Mon, Phnom Penh, Cambodia}. From this hub, the company spearheads local innovation by specializing in the research and development of artificial intelligence, automated machinery, robot arms, mobile robots, drones, and tailored industrial automation systems.The company actively focuses on supporting micro, small, and medium enterprises (MSMEs) through flexible business models, including custom engineering, manufacturing, and Robot as a Service (RaaS) deployments. Beyond commercial production, AI Farm Robotics plays a vital role in national capacity building by running educational programs like the Robot Young Academy and dedicated STEM courses. These initiatives are designed to upskill the local workforce, prepare students for the digital economy, and close the technological gap in the region. By collaborating with domestic and international universities, trade organizations, and government bodies, the company continues to expand its technological portfolio and accelerate automated industrial adoption across Southeast Asia.
 
 \subsection{Services and Functions of the Organization}
 
 \textbf{AI FARM Robotics} is an innovative technology and automation leading company based in Phnom Penh, Cambodia. The company specializes in artificial intelligence, robotics, and advanced engineering solutions tailored to modernize businesses. By combining local capacity building with cutting-edge technology, it helps micro, small, and medium enterprises (MSMEs) transition into automated environments. The company bridges the gap between complex technology and practical application through five core pillars of service:
 
-\begin{itemize}
+\begin{itemize}        
     \item \textbf{Strategic Consulting:} cDesigning customized automation and AI strategies for local businesses and aAnalyzing existing workflows to identify high-impact areas for robot implementation.
     \item \textbf{Engineering and System Integration:} Building and customizing physical robot frameworks and industrial components and installing and configuring automated machinery directly into business environments.
     \item \textbf{Software and AI Development:} Training intelligent models for data processing, computer vision, and predictive mechanics and developing localized, responsive algorithms and adaptive code creators for autonomous navigation.
@@ -62,7 +62,7 @@ Tonle Bassac, Khan Chamkar Mon, Phnom Penh, Cambodia}. From this hub, the compan
 
 \subsection{Address and Contact}
 
-\begin{itemize}
+\begin{itemize}        
     \item \textbf{Organization Name:} AI Farm Robotics Co., Ltd.
     \item \textbf{Website:} \href{https://aifarm.dev/}{aifarm.dev}
     \item \textbf{Email:} \href{mailto:info@aifarm.dev}{info@aifarm.dev}
@@ -86,13 +86,13 @@ To achieve this, the project will conduct empirical experiments using a range of
 
 \subsection{Problem Statement}
 
-\hs Routine inspection of roadways, bridges, and runways is critical for infrastructural safety, yet manual visual surveys are expensive, slow, and subjective. While AI-based crack detection has advanced on close-up pavement, walls and roof-top images, applying these methods to large-scale aerial photographs, often up to or more than 100 megapixels, introduces severe challenges. Initially, cracks can be as thin as 1 to 3 pixels, cover less than 1\% of the image area, and must be detected across variable lighting conditions without losing continuity across processing tiles. Current deep learning models frequently fail to balance fine detail with global context, and they lack efficient inference strategies for gigapixel-scale images.
+\hs \hl{Routine inspection of critical infrastructure, including bridges, buildings, and runways, is essential for public safety. However, current manual inspection methods are expensive (averaging \$X per mile), subjective, and limited in coverage. While AI-based crack detection has shown promise on close-up images (typically $< 5$ megapixels), applying these methods to aerial imagery introduces severe challenges. When a UAV captures a building facade from 15m altitude, a structural crack just 2mm wide is resolved as only 1--3 pixels in the 100+ megapixel image-occupying less than 0.01\% of the total area. Furthermore, the massive image size exceeds the memory limits of standard GPUs (typically 8--24GB VRAM), requiring specialized inference strategies. Current models fail to balance the preservation of these fine spatial details with global contextual understanding, and lack efficient gigapixel-scale inference pipelines.}
 
 \subsection{Objectives}
 
 \hs Build an accurate, precise, and practically deployable AI model to detect and segment cracks presenting on large buildings, contributing to reduced infrastructural improvement, early maintenance and public safety. Furthermore, this project aims to design and validate a deep learning framework for automatic, pixel-level crack segmentation in high-resolution aerial imagery. Specific goals are to:
 
-\begin{itemize}
+\begin{itemize}        
     \item Develop an empirical experiment on segmentation and detection models using modified Semantic, Segmentation Models, Instance Segmentation models, and transformer-based models that are capable of capturing fine cracks on high-resolution images.
     \item Implement a tile-based inference pipeline with blended overlaps, allowing seamless processing of arbitrarily large-scale, high-resolution images on a single GPU.
     \item Evaluate the system on multiple real-world aerial crack datasets, comparing against published baselines.
@@ -109,4 +109,3 @@ To achieve this, the project will conduct empirical experiments using a range of
     \caption{\textit{Internship schedule}}
     \label{fig:internship-schedule}
 \end{figure}
-

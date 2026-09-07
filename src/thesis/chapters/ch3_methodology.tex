@@ -104,7 +104,7 @@
 
 \hs This overlap ensures that cracks located near tile boundaries are not truncated or lost during independent tile forward passes.
 
-\hs \hl{The inference pipeline was validated on high-resolution test images of approximately 10 megapixels,} which were sourced from the public datasets' test split (where native resolutions exceeded \(512 \times 512\)) and used exclusively for evaluation. These images, while not reaching the gigapixel scale targeted for final deployment, were sufficiently large to demonstrate the effectiveness of the tile-based approach and the blended overlap merging strategy. The pipeline is architecturally scalable to gigapixel images, as the tile processing is independent of total image dimensions, requiring only sufficient disk storage and sequential processing.
+\hs \hl{The inference pipeline was validated on high-resolution test images of approximately 13.5 megapixels,} which were sourced from the public datasets' test split (where native resolutions exceeded \(512 \times 512\)) and used exclusively for evaluation. These images, while not reaching the gigapixel scale targeted for final deployment, were sufficiently large to demonstrate the effectiveness of the tile-based approach and the blended overlap merging strategy. The pipeline is architecturally scalable to gigapixel images, as the tile processing is independent of total image dimensions, requiring only sufficient disk storage and sequential processing.
 
 \hs \hl{If an input image's dimensions are not perfectly divisible by the stride, zero-padding is temporarily applied to the right and bottom boundaries. After the blended overlap merging reconstructs the full probability map, the padded regions are cropped back to the original image dimensions.}
 
@@ -201,109 +201,120 @@
 
 \hs To empirically evaluate the trade-offs between accuracy, inference speed, and spatial context-awareness, three distinct families of state-of-the-art segmentation architectures were selected and evaluated.
 
-\hs
+\textbf{Selection Rationale}
+
+The choice of architectures was guided by three primary considerations:
+
+\begin{itemize}
+    \item \textbf{Architectural diversity:} To compare fundamentally different approaches to segmentation (CNN-based semantic segmentation, CNN-based instance segmentation, and transformer-based segmentation).
+    \item \textbf{Deployability:} All selected models are lightweight enough for edge-device deployment, a key requirement for the internship's focus on practical robotics applications at AI Farm Robotics.
+    \item \textbf{Proven performance:} Each architecture has demonstrated strong performance on crack detection or similar fine-structure segmentation tasks in the literature.
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \caption{Comparison of selected model architectures.}
+    \label{tab:model_comparison}
+    \renewcommand{\arraystretch}{1.2}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{@{}l l c c c@{}}
+            \toprule
+            \textbf{Model Family} & \textbf{Backbone} & \textbf{Params (M)} & \textbf{FLOPs (G)} & \textbf{Key Feature}                         \\
+            \midrule
+            U-Net                 & EfficientNet-B0   & 6.30                & 12.0            & Skip connections preserve fine crack details \\
+            SegFormer             & MiT-B0            & 3.71                & 7.87            & Global receptive field via self-attention    \\
+            YOLO                  & YOLO26s-seg       & 11.43               & 34.3               & Single-stage, instance-level output          \\
+            \bottomrule
+        \end{tabular}%
+    }
+\end{table}
 
 \subsection{Baseline Architectures}
 
 \subsubsection{Semantic Segmentation: U-Net}
 
-These architectures serve as the primary baseline due to their high fidelity in producing dense, pixel-level classification outputs.
-\begin{itemize}
-    \item \textbf{\hl{U-Net (ResNet-34 Backbone):}} A symmetrical encoder-decoder network \cite{liu-2019, zhao-2026}. The encoder extracts rich feature hierarchies using a pre-trained ResNet-34 backbone, while the decoder recovers spatial resolution. Skip connections directly transfer high-resolution local features from the encoder to the decoder, preserving the fine details of thin cracks.
-    \item \textbf{\hl{DeepLabV3+:}} Incorporates Atrous Spatial Pyramid Pooling (ASPP) to capture multi-scale contextual information \cite{wang-2025, gharehbaghi-2026b}. By using dilated convolutions with varying sampling rates, it extracts context at multiple scales without losing spatial resolution, which is highly beneficial for cracks of varying widths.
-\end{itemize}
+\hs U-Net was selected as the primary semantic segmentation baseline due to its established performance in crack detection. The architecture employs a symmetric encoder-decoder structure with skip connections that directly transfer high-resolution local features from the encoder to the decoder. This design is particularly beneficial for thin crack detection, as it preserves fine spatial details that are often lost in deeper networks.
+
+\begin{sloppypar}
+    \hs The EfficientNet-B0 backbone was chosen as the encoder for its favorable trade-off between model size and representational capacity. With only \textbf{6.3 million parameters}, EfficientNet-B0 balances computational efficiency with strong feature extraction performance, making it suitable for deployment on resource-constrained edge devices. The U-Net decoder incorporates Spatial and Channel Squeeze-and-Excitation (scSE) attention to further refine feature representations and improve detection of subtle crack patterns.
+\end{sloppypar}
+
+\textbf{Strengths:} Superior preservation of fine spatial details; well-established performance on crack segmentation; computationally efficient.
+
+\textbf{Weaknesses:} Limited global receptive field; may struggle with contextual understanding in complex scenes.
 
 \subsubsection{Instance Segmentation: YOLO}
 
-\hs These models are evaluated to assess whether treating distinct cracks as separate instances reduces noise and improves global delineation.
-\begin{itemize}
-    \item \textbf{\hl{YOLO (v26):}} Single-stage, anchor-free object detection and segmentation frameworks \cite{zhang-2024a, sohaib-2024}. YOLOv8 utilizes the C2f module to balance speed and feature diversity. YOLOv9 introduces Programmable Gradient Information (PGI) and the Generalized Efficient Layer Aggregation Network (GELAN) to retain spatial details. These models are expected to significantly reduce computational latency, making them ideal for edge-device deployment on autonomous robots \cite{zhang-2024b, zhang-2025}.
-\end{itemize}
+\hs \hl{YOLO was selected to evaluate whether treating distinct cracks as separate instances reduces noise and improves global delineation. The YOLO family of single-stage, anchor-free detectors is well-suited for real-time edge deployment due to its efficient architecture.}
+
+\hs \hs{The YOLO26s-seg variant used in this study balances speed and accuracy, incorporating features such as Programmable Gradient Information (PGI) and the Generalized Efficient Layer Aggregation Network (GELAN) to retain spatial details while maintaining low latency. The model outputs both bounding boxes and pixel-level masks, enabling instance-wise analysis of individual cracks. With 11.4 million parameters and 34.3 GFLOPs, YOLO26s-seg is computationally heavier than the semantic segmentation models but offers the advantage of distinguishing individual crack instances.}
+
+\textbf{Strengths:} Fast inference; instance-level differentiation; suitable for real-time edge deployment.
+
+\textbf{Weaknesses:} May miss very thin cracks; requires careful threshold tuning; higher computational cost than lightweight semantic models.
 
 \subsubsection{Transformer-Based Models: SegFormer}
 
-\hs These architectures are evaluated for their superior capacity to model long-range spatial dependencies.
+\hs \hl{SegFormer was selected to evaluate the potential benefits of global receptive fields for crack detection. Traditional convolutional neural networks process features locally using fixed receptive fields, which can lead to loss of continuity for long, branching cracks. Transformers, in contrast, employ self-attention mechanisms to model long-range spatial dependencies across the entire image canvas.}
+
+\hs \hl{The SegFormer architecture combines a hierarchical Mix Transformer (MiT) encoder with a lightweight MLP decoder. The MiT-B0 variant used in this study captures both high-resolution local details and global contextual features without requiring positional encodings, avoiding performance drops when test resolution differs from training resolution. With only \textbf{3.7 million parameters}, SegFormer-MiT-B0 is the lightest model evaluated in this study.}
+
+\textbf{Strengths:} Global receptive field; preserves geometric continuity; lightweight.
+
+\textbf{Weaknesses:} Lacks translational equivariance inductive bias; requires more training data; computationally expensive for self-attention at higher resolutions.
+
+\subsubsection{Loss Functions}
+
+\hs For U-Net and SegFormer (SMP-based models), a combined loss function was employed to address the extreme class imbalance inherent in crack detection, where crack pixels typically occupy less than 1\% of the total image area. The total loss is formulated as:
+\begin{equation}
+    L_{\text{total}} = w_{\text{BCE}} \cdot L_{\text{BCE}} + w_{\text{Dice}} \cdot L_{\text{Dice}} + w_{\text{Focal}} \cdot L_{\text{Focal}}
+\end{equation}
+where the three components are defined as follows.
+
+\textbf{Binary Cross-Entropy (BCE) Loss.} BCE provides pixel-wise classification supervision, ensuring each pixel is individually evaluated against the ground truth:
+\begin{equation}
+    L_{\text{BCE}} = -\frac{1}{N} \sum_{i=1}^{N} \left[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \right]
+\end{equation}
+
+\textbf{Dice Loss.} Dice loss optimizes the overlap between predicted and ground truth masks, which is more robust to class imbalance than BCE alone. It directly maximizes the F1-score at the pixel level:
+\begin{equation}
+    L_{\text{Dice}} = 1 - \frac{2 \, |P \cap G|}{|P| + |G|}
+\end{equation}
+where $P$ and $G$ denote the predicted and ground truth masks, respectively.
+
+\textbf{Focal Loss.} Focal loss \cite{29-lin-2017} down-weights the contribution of well-classified examples, forcing the model to focus on hard-to-classify crack pixels:
+\begin{equation}
+    L_{\text{Focal}} = -\frac{1}{N} \sum_{i=1}^{N} (1 - p_i)^{\gamma} \, y_i \log(p_i)
+\end{equation}
+A focusing parameter of $\gamma = 2.0$ was used.
+
+\textbf{For YOLO:} \hl{YOLO employs its native loss function as implemented in the Ultralytics framework. The loss comprises multiple components:}
+\begin{equation}
+    L_{\text{YOLO}} = L_{\text{box}} + L_{\text{cls}} + L_{\text{dfl}} + L_{\text{mask}}
+\end{equation}
+where:
 \begin{itemize}
-    \item \textbf{SegFormer:} A hierarchical Transformer encoder combined with a lightweight MLP decoder \cite{pereira-2025}. It does not require positional encodings, avoiding performance drops when test resolution differs from training resolution, and maintains global spatial awareness across large receptive fields.
-    \item \textbf{Swin Transformer:} Utilizes a shifted-window self-attention scheme \cite{zhang-2024a}. By restricting self-attention computation to local, non-overlapping windows while allowing cross-window connections, it achieves linear computational complexity with respect to image size, capturing global context efficiently.
+    \item $L_{\text{box}}$ is the bounding box regression loss (CIoU loss).
+    \item $L_{\text{cls}}$ is the classification loss for object presence.
+    \item $L_{\text{dfl}}$ is the Distribution Focal Loss for improved localization.
+    \item $L_{\text{mask}}$ is the binary segmentation loss for mask prediction.
 \end{itemize}
 
-\subsection{Implementation Details (Frameworks, Hardware, Hyperparameters)}
+This multi-component loss enables YOLO to jointly optimize detection and segmentation in a single-stage pipeline.
 
-\hs The technical environment was built entirely on PyTorch (v2.0+) and Python 3.9, leveraging specialized libraries including OpenCV, Albumentations, and Ultralytics YOLO.
+\section{Implementation Details}
 
-\textbf{Hardware Specifications:} All experiments were conducted on a workstation equipped with an Intel i5-12600K CPU, 64 GB of RAM, and an NVIDIA RTX A6000 GPU with 48 GB of VRAM.
+\hs The technical environment was built in mixed modes both digital and physical; it is a hybrid setup:
 
-\textbf{Hyperparameters and Optimization:}
+\textbf{Training Specifications:} The models were trained on Google Colab equipped with Tesla T4 GPU runtime with 16 GB of VRAM.
 
-\begin{itemize}
-    \item \textbf{Optimizer:} Stochastic Gradient Descent (SGD) with a momentum of 0.937, or AdamW with a weight decay of $1 \times 10^{-3}$ \cite{pereira-2025}.
-    \item \textbf{Learning Rate:} An initial learning rate of $1 \times 10^{-4}$, decaying using a Cosine Annealing schedule to $1 \times 10^{-6}$ over 100 epochs.
-    \item \textbf{Batch Size:} Set to 16 for training $512 \times 512$ patches.
-    \item \textbf{\hl{Loss Function:}} A hybrid formulation combining Binary Cross-Entropy (BCE) and Dice Loss to handle class imbalance, or the centerline Dice (clDice) loss \cite{shit-2021} to preserve connectivity:
-          \begin{equation}
-              L_{\text{total}} = \lambda \cdot L_{\text{clDice}} + (1 - \lambda) \cdot L_{\text{Dice}}
-          \end{equation}
-          where $\lambda = 0.5$ balances the volumetric and topological overlap \cite{shit-2021, pereira-2025}.
-\end{itemize}
-
-\section{Tile-Based Inference Pipeline for Gigapixel Images}
-
-\hs Standard convolutional neural networks cannot directly process extremely large aerial images (exceeding 100+ Megapixels) due to GPU memory limitations. To address this constraint, we designed and implemented a tile-based inference engine.
-
-\subsection{Sliding Window Extraction}
-
-\hs Given a high-resolution input image $I$ of size $W \times H$, the inference engine dynamically partitions the image into overlapping tiles of size $M \times N$ ($512 \times 512$ pixels) using a step stride of $S = 384$ pixels. The horizontal overlap $O_x$ and vertical overlap $O_y$ are set to 128 pixels (25\% overlap). If the image dimensions are not perfectly divisible by the stride, zero-padding is applied to the right and bottom boundaries to ensure all tiles have a uniform size.
-
-\subsection{Blended Overlap Merging for Seamless Reconstruction}
-
-To prevent artificial seam lines and edge discontinuities where adjacent tiles meet, we developed a blended overlap merging technique. We construct a 2D weight map $W(x, y)$ of the same spatial size as the tiles ($512 \times 512$ pixels), defined by the product of two 1D window functions:
-\begin{equation}
-    W(x, y) = w_x(x) \cdot w_y(y)
-\end{equation}
-For a tile of size $L \times L$ (where $L = 512$), the 1D linear ramp window function $w_x(x)$ is defined over the interval $x \in [0, L-1]$ as:
-\begin{equation}
-    w_x(x) = \begin{cases}
-        \frac{x}{d},         & \text{if } 0 \le x < d     \\
-        1,                   & \text{if } d \le x < L - d \\
-        \frac{L - 1 - x}{d}, & \text{if } L - d \le x < L
-    \end{cases}
-\end{equation}
-where $d = 128$ is the overlap width. This ramp function assigns a weight of 1 to the center of the patch and smoothly decays to 0 at the overlapping boundaries.
-
-As the sliding window moves across the image grid, the predicted probability maps $P_k(x, y)$ generated by the network for each tile $k$ are mapped back to their global coordinate positions $(X, Y)$. The global probability map $P_{\text{global}}(X, Y)$ is computed as the weighted average of all overlapping predictions:
-\begin{equation}
-    P_{\text{global}}(X, Y) = \frac{\sum_{k} W_k(x, y) \cdot P_k(x, y)}{\sum_{k} W_k(x, y)}
-\end{equation}
-where $W_k(x, y)$ is the weight assigned to pixel $(x, y)$ in the local tile $k$, mapped to the global coordinate $(X, Y)$. This formulation smoothly blends overlapping boundaries, eliminating abrupt transitions.
-
-\subsection{Post-Processing and Thresholding}
-
-\hl{The reconstructed global probability map $P_{\text{global}}(X, Y) \in [0, 1]$ is converted into a binary mask $B(X, Y) \in \{0, 1\}$ using a classification threshold $T_c$:}
-\begin{equation}
-    B(X, Y) = \begin{cases}
-        1, & \text{if } P_{\text{global}}(X, Y) \ge T_c \\
-        0, & \text{otherwise}
-    \end{cases}
-\end{equation}
-By default, $T_c$ is set to 0.5.
-
-To remove isolated false-positive pixel noise caused by dust, shadows, or texturing, an area-based morphological filtering step is applied. Any connected component $C_i$ in the binary mask $B$ with a total area smaller than $A_{\text{min}}$ is discarded:
-\begin{equation}
-    B_{\text{refined}}(X, Y) = \begin{cases}
-        0,       & \text{if } (X, Y) \in C_i \text{ and } \text{Area}(C_i) < A_{\text{min}} \\
-        B(X, Y), & \text{otherwise}
-    \end{cases}
-\end{equation}
-where the minimum component area is set to $A_{\text{min}} = 10$ pixels.
+\textbf{Hardware Implementation:} During development, the models were implemented using intern's hardware, which has limited computational resources; however, the models were optimized to run efficiently within these constraints. \hl{Later on, the models were tested on a more powerful workstation with an NVIDIA RTX 4070 GPU from the company to validate performance and inference speed.}
 
 \section{Evaluation Framework}
-
 This section describes the quantitative evaluation metrics and the protocol established to compare the performance of different models.
 
 \subsection{Evaluation Metrics}
 \label{subsec:metrics}
-
 Due to the extreme class imbalance in crack detection (where crack pixels typically occupy less than 1\% of the total image area), traditional pixel accuracy is highly misleading. A naive model predicting 100\% background would score $>99\%$ accuracy while failing completely. Therefore, the models are evaluated using metrics that focus on the positive class:
 \begin{enumerate}
     \item \textbf{Intersection over Union (IoU):} Measures the ratio of overlapping area to union area between predicted mask $P$ and ground truth $G$:
