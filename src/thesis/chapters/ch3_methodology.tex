@@ -152,6 +152,26 @@
 
 \hs By enforcing source-image level splitting, tiles from the same physical road section or lighting condition were prevented from appearing in both the training and evaluation splits, thereby ensuring the generalizability of the performance metrics.
 
+\subsection{Class Imbalance Analysis}
+\hs An analysis of pixel-level class distribution in the training set revealed significant class imbalance:
+
+\begin{table}[h]
+    \centering
+    \caption{\hl{Class distribution in training split.}}
+    \label{tab:class_distribution}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{@{}l r c@{}}
+        \toprule
+        \textbf{Class} & \textbf{Pixel Count} & \textbf{Percentage} \\
+        \midrule
+        Background     & \hl{1,617,843,456}        & \hl{99.41\%}             \\
+        Crack          & \hl{9,597,056}            & \hl{0.59\%}              \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\hs \hl{This extreme imbalance (approximately 168:1 background-to-crack ratio) confirms the necessity of using evaluation metrics such as IoU, F1-Score, and Recall that are robust to class imbalance, rather than relying on pixel accuracy.}
+
 \subsection{Data Augmentation Strategy}
 
 \hs To improve model generalization and prevent overfitting on the limited training data, a series of augmentations was applied \hl{online} during training. Each augmentation was applied to both the RGB image and its corresponding binary mask to maintain spatial correspondence for geometric transforms.
@@ -221,8 +241,8 @@ The choice of architectures was guided by three primary considerations:
             \toprule
             \textbf{Model Family} & \textbf{Backbone} & \textbf{Params (M)} & \textbf{FLOPs (G)} & \textbf{Key Feature}                         \\
             \midrule
-            U-Net                 & EfficientNet-B0   & 6.30                & 12.0            & Skip connections preserve fine crack details \\
-            SegFormer             & MiT-B0            & 3.71                & 7.87            & Global receptive field via self-attention    \\
+            U-Net                 & EfficientNet-B0   & 6.30                & 12.0               & Skip connections preserve fine crack details \\
+            SegFormer             & MiT-B0            & 3.71                & 7.87               & Global receptive field via self-attention    \\
             YOLO                  & YOLO26s-seg       & 11.43               & 34.3               & Single-stage, instance-level output          \\
             \bottomrule
         \end{tabular}%
