@@ -8,7 +8,7 @@
       "args": [
         "/workspace/scripts/build-latex.sh",
         "thesis",
-        "/workspace", 
+        "/workspace",
         "/workspace/build/thesis",
         "full"
       ],
@@ -24,7 +24,7 @@
     },
     {
       "label": "Build LaTeX (Fast)",
-      "type": "process", 
+      "type": "process",
       "command": "/bin/bash",
       "args": [
         "/workspace/scripts/build-latex.sh",
